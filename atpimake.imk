@@ -1,0 +1,297 @@
+/* EDITION AC14 (REL002), ITD ACST.177 (95/06/21 05:33:00) -- CLOSED */
+
+/******************************************************************************\
+********************************************************************************
+**                                                                            **
+**                              ATPIMAKE                                      **
+**                                                                            **
+********************************************************************************
+\******************************************************************************/
+/*
+ * NOTE:
+ * -----
+ * When invoking make on the Makefile created from this Imakefile,
+ * you must have a ROOTDIR environment variable set to the top of
+ * your loadbuild hierarchy.
+ */
+
+/*
+ *	Type "make" to make libatp.a and atpexmp
+ *	Type "make test" to extract test suites and invoke autotest.
+ *	Type "make install" to install system
+ */
+
+/**************************/
+/* Set Up All Definitions */
+/**************************/
+
+   RELEASE     = "2.11"
+   VERSION     = "ATP.AC12"
+   OPSYS       = 'uname -srvm'
+/* TCL_VERSION = '/tmp/GetTclVersion' */
+   SRC_DIR     = .
+
+/* Pick the compiler you want, last CC gets used. */
+
+   CC = cc	                     /* K&R C  */
+   CC = CC -w	                 /* C++    */
+   CC = cc -Aa -D_HPUX_SOURCE    /* ANSI C */
+
+/*
+ * Set the debug options ('make' looks at CDEBUGFLAGS) if DEBUG defined.
+ */
+
+#ifdef DEBUG
+     CDEBUGFLAGS = -g -DDEBUG
+#endif
+
+#if (ATP_MEM_DEBUG || TCL_MEM_DEBUG)
+     CDEBUGFLAGS = -g -DDEBUG -DTCL_MEM_DEBUG -DATP_MEM_DEBUG
+#endif
+
+/*
+ * Modules to go in the lib<fsi>.a library provided by this subsystem.
+ */
+ 
+LIBSRCS = atp2tcl.c atpalloc.c atpbcdpm.c atpbool.c atpcase.c \
+          atpcheck.c atpchois.c atpcmd.c atpcmplx.G atpdebug.c \
+          atpdynam.c atperror.c atpfindp.c atpframe.c atphelp.c \
+          atphelpc.c atphexpm.c atpinit.c atpkeywd.c atplist.c \
+          atpmanpg.c atpmem.c atpnullp.c atpnum.c atppage.c \
+          atpparse.c atppmchk.c atppmdef.c atppmptr.c \
+          atprpblk.c atpstcmp.o atpstr.c atptoken.c atpusrio.c
+
+LIBOBJS = atp2tcl.o atpalloc.o atpbcdpm.o atpbool.o atpcase.o \
+          atpcheck.o atpchois.o atpcmd.o atpcmplx.o atpdebug.o \
+          atpdynam.o atperror.o atpfindp.o atpframe.o atphelp.o \
+          atphelpc.o atphexpm.o atpinit.o atpkeywd.o atplist.o \
+          atpmanpg.o atpmem.o atpnullp.o atpnum.o atppage.o \
+          atpparse.o atppmchk.o atppmdef.o atppmptr.o \
+          atprpblk.o atpstcmp.o atpstr.o atptoken.o atpusrio.o
+
+OBJS = $(LIBOBJS) atpexmp.o
+SRCS = $(LIBSRCS) atpexmp.c
+
+/*
+ * Libraries
+ */
+ 
+SYS_LIBRARIES  = -lm -lmalloc
+BASE_LIBRARIES = -lslp -ltd -latp
+APPL_LIBRARIES =
+
+/*
+ * 'make' (invoked without parameters) builds the subsystem lib<fsi>.a library.
+ */
+
+AllTarget(libatp.a atpexmp)
+
+/*
+ *	'make lib<fsi>.a' builds the lib<fsi>.a library.
+ */
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(atp,$(LIBOBJS))
+
+/*
+ *	'make atpexmp' builds the atpexmp example program executable.
+ */
+
+atpexmp: libatp.a atpexmp.o
+
+SingleProgramTarget(atpexmp, atpexmp.o, \
+                    $(APPL_LIBRARIES),  \
+                    $(BASE_LIBRARIES) $(SYS_LIBRARIES))
+
+/*
+ * Test ATP using the test suites.
+ */
+
+EXTRACT_TESTS="\nExtracting ATP test suites...\n"
+TESTDIR_CREATED="\nATP test suites directory \"atptests\" created.\n"
+UNCOMPRESS_TARZ="\nUncompress atptests.tar.Z...\n"
+
+#define DoAutoTest()								@@\
+test: libatp.a	atpexmp								@@\
+		@if [ ■	-d atptests ] ; \					@@\
+		then \										@@\
+			: # Do nothing \						@@\
+		elif [	-f atptests.tar ] ; \				@@\
+		then \										@@\
+			echo $(EXTRACT_TESTS); \				@@\
+			tar -xvf atptests.tar; \				@@\
+			rm atptests.tar; \						@@\
+			echo $(TESTDIR_CREATED); \				@@\
+		elif [	-f atptests.tar.Z ] ; \				@@\	
+		then \										@@\
+			echo $(UNCOMPRESS_TARZ); \				@@\
+			uncompress atptests.tar.Z; \			@@\
+			echo ${EXTRACT_TESTS); \				@@\
+			tar -xvf atptests.tar; \				@@\
+			rm atptests.tar; \						@@\
+			echo $(TESTDIR_CREATED); \				@@\
+		elif [ -f atptests.tarz ] ; \				@@\
+		then \										@@\
+			ln -s atptests.tarz atptests.tar.Z ; \	@@\
+			echo $(UNCOMPRESS_TARZ); \				@@\
+			uncompress atptests.tar.Z; \			@@\
+			if [ ! -f atptests.tar ] ; \			@@\
+			then \									@@\
+				echo "\007\007\007\007\007\007";\	@@\
+				echo "Don't worry, I'll fix it.";\	@@\
+				rm atptests.tar.Z ; \				@@\
+				mv atptests.tarz atptests.tar ; \	@@\
+				cp atptests.tar atptests.tmp ; \	@@\
+				compress atptests.tmp ; \			@@\
+				mv atptests.tmp.Z atptests.tarz ; \	@@\
+				echo "\007\007\007\007\007\007";\	@@\
+				echo "DONE - Fixed atptests.tarz";\	@@\
+				echo "\007\007\007\007\007\007";\	@@\
+			fi ; \									@@\
+			echo $(EXTRACT_TESTS); \				@@\
+			tar -xvf atptests.tar; \				@@\
+			rm atptests.tar; \						@@\
+			echo $(TESTDIR CREATED); \				@@\
+		else \										@@\
+			echo "\nTest suites directory \"atptests\" missing.";\		@@\
+			echo "Original TARZ file \"atptests.tarz\" missing.";\		@@\
+			echo "Compressed tar file \"atptests.tar.Z\" not found.";\	@@\
+			echo "Uncompressed tar file \"atptests.tar\" not found.";\	@@\
+			exit 1; \								@@\
+		fi ; \										@@\
+		cwd=`pwd`; \								@@\
+		cd $$cwd; ( echo cd $(SRC_DIR)/atptests ; echo source defs ; echo source all ) | ./atpexmp -oAutoTest
+
+	DoAutoTest()
+
+/*
+ * Stamp the library and executable with loadbuild details.
+ */
+
+/* Get Tcl version from tcl.h using GetTclVersion.c */
+
+/*
+all:: GetTclVersion
+
+GetTclVersion:
+	@`echo "#include <tcl.h>\n main(){printf(\"%s\\\\\\n\",TCL_VERSION);}">/tmp/GetTclVersion.c; cc -o /tmp/GetTclVersion /tmp/GetTclVersion.c;`
+
+*/
+
+	StampLoadbuildDetails(libatp.a atpexmp)
+
+/* If using Purify, use the following .purify file to suppress warnings. */
+all:: PurifySuppressions
+PurifySuppressions:
+		@if [ -f atpimake.imk ] ; \						@@\
+		then \											@@\
+			grep '‘suppress atpimake.imk > .purify ; \	@@\
+		fi
+
+/*
+\# Suppress reported frame relay calls and reads in ATP (ATP.AC08)
+suppress umr Atp_CopyCallFrame
+suppress umr Atp_CopyCallFrameElems
+suppress umr Atp_DisplayManPage
+suppress umr Atp_ExecuteCallback
+suppress umr Atp_OutputPager
+suppress umr Atp_PagerCmd
+suppress umr Atp_PagingCmd
+suppress umr Atp_PrintfWordwrap
+suppress umr Atp_SelectInputAndParseParm
+suppress umr VPrintErrorDescRec
+\# Suppress reported Tel memory leaks (Tcl v7.3)
+suppress mlk malloc; Tcl_CreateMathFunc
+suppress mlk malloc; StringCreate
+suppress mlk malloc; RebuildTable
+suppress mlk malloc; Tcl_CallWhenDeleted
+suppress plk malloc; SetupAppendBuffer
+suppress plk malloc; Envlnit
+suppress mlk malloc; Envlnit
+suppress plk malloc; InitHistory
+suppress plk malloc; RebuildTable
+*/
+
+/*
+all:: RmGetTclVersion
+
+RmGetTclVersion:
+		@$(RM) /tmp/GetTclVersion*
+*/
+
+/*
+ * Give instructions to type "make test" and "make install".
+ */
+all:: MakeTestAndlnstallInstructions
+
+MakeTestAndlnstalllnstructions::
+	@echo "\nlibatp.a and atpexmp OK."; \
+	echo "Type V'lmmake testm\" to test ATP."; \
+	echo "Type V'make install\" to install ATP system.\n"
+
+/*
+ * 'make lint' lints the source programs.
+
+	NormalLintTarget($(LIBSRCS))
+
+ */
+
+/*
+ * 'make lintlib' creates a lint library for lib<fsi>.a
+
+	LintLibraryTarget(atp,$(LIBSRCS))
+ */
+
+/*
+ *	'make install' installs the lint library, the exported header
+ *	file and the executable(s).
+ *	NOTE: LINTLIBDIR, INCDIR and BINDIR are set in Imake.tmpl.
+ */
+	InstallNonExec(atph.h,	$(INCDIR))
+	InstallNonExec(atp2tclh.h, $(INCDIR))
+	InstallLibrary(atp,	$(LIBDIR))
+	InstallProgram(atpexmp,	$(BINDIR))
+/*	InstallLintLibrary(atp, $(LINTLIBDIR)) */
+
+/*
+ *	'make depend' puts file dependencies in the Makefile
+ *	 NOTE: make depend uses SRCS variable.
+ */
+	DependTarget()
+
+/*
+ * C Navigator defines (not sure if it still works)
+ */
+
+#define CnavTarget(SYSTEM,EXEFILES)									@@\
+Cnav:																@@\
+		PRODDIR=/datasservext/stp/Project;	\						@@\
+		for EXE in EXEFILES; do \									@@\
+		  SUBSYSTEM="$$EXE".cents; \								@@\
+		  export SUBSYSTEM; \										@@\
+		  if [ -d $$PRODDIR/$$RELEASE/SYSTEM/$$EXE ]; then \		@@\
+			cde -p $$PRODDIR/$$RELEASE/SYSTEM -s $$EXE -Vr -v; \	@@\
+		  else \													@@\
+			cde -p $ $ PRODDIR/$ $RELEASE/SYSTEM -s $$EXE -R -v; \	@@\
+		  fi; \														@@\
+		  kill -9 `ps -e | egrep Xll_ui | cut -cO-6`; \				@@\
+		  kill -9 `ps -e | egrep executive | cut -cO-6`; \			@@\
+		done
+
+/*
+ * XCodeCenter defines (not sure if it still works)
+ */
+
+#define CodeCenterTarget(program,objects,sources,locallibs,syslibs)	@@\
+program.cents:														@@\
+		#load $ (IPATH) sources										@@\
+		#load -L. -L$(L) -L/ae/$(UAEVER)/uae/lib syslibs			@@\
+																	@@\
+program.cento:														@@\
+		#load $(IPATH) objects										@@\
+		#load -L. -L$(L) -L/ae/$(UAEVER)/uae/lib syslibs
+
+	CodeCenterTarget(atpexmp, atpexmp.c,					\
+						atpexmp.o,							\
+						$(APPL_LIBRARIES),					\
+						$(BASE_LIBRARIES) $(SYS_LIBRARIES))
