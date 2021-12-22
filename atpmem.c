@@ -246,7 +246,7 @@ Atp_StoreParm(ParmDefEntryPtr, isDefault, va_alist)
 	parm_rec.downLevel	= NULL;
 
 	/* Check amount of memory remaining before writing to it. */
-	CheckstoreMemory(0);
+	CheckStoreMemory(0);
 
 	/*
 		Point to current location in data store where parameter
@@ -402,7 +402,7 @@ Atp_StoreParm(ParmDefEntryPtr, isDefault, va_alist)
 								size of Atp_ChoiceDescriptor, causing
 								insufficient data store and hence
 								store trampling. Also, should call
-								CheckstoreMemory before updating
+								CheckStoreMemory before updating
 								parm_rec and writing to store.
 	Alwyn Teh	24 Dec 1993		Return location of actual parmstore
 								Atp_ChoiceDescriptor by means of
@@ -697,7 +697,7 @@ Atp_StoreConstructInfo( ParmDefEntryPtr, _parmcode, isDefault, va_alist )
 		break;
 	  }
 
-	  WriteFloatingEOPraarker(ParmStoreBuilder, EOP_APPEND);
+	  WriteFloatingEOPmarker(ParmStoreBuilder, EOP_APPEND);
 
 	  if (isDefault || ((Atp_PARMCODE(parmcode) == ATP_BRP) && isUserZeroInst))
 	  {

@@ -131,7 +131,7 @@ static void			resize_handler _PROTO_((int));
 
 ********************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
-Atp_CmdRec * Atp_AssembleCmcLRecord
+Atp_CmdRec * Atp_AssembleCmdRecord
 (
 	char				*name,
 	char				*desc,

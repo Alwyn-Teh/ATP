@@ -48,7 +48,7 @@
 
 #include <stdlib.h>
 #include <limits.h>
-#include <values.h>
+// #include <values.h>
 #include <string.h>
 #include <float.h>
 
@@ -104,7 +104,7 @@ int		(*Atp_IsLangBuiltInCmd) _PROTO_((char *cmdname)) = NULL;
 	Alwyn Teh	7 June 1993			Use Atp_AdvPrintf().
 	Alwyn Teh	23 June 1993		No longer need to
 									check for paging here.
-	Alwyn Teh	2 August 1994		Use Atp_PrintfWordwrap
+	Alwyn Teh	2 August 1994		Use Atp_PrintfWordWrap
 									for possibly long strings.
 
 ********************************************************************-*/
@@ -127,12 +127,12 @@ Atp_GenerateParmDefHelplnfo(__CmdRecPtr)
 	  return error_msg;
 	}
 
-	Atp_PrintfWordwrap(	Atp_AdvPrintf,
+	Atp_PrintfWordWrap(	Atp_AdvPrintf,
 						-1, 1, 29,
 						"\nParameter table for command: \"%s\" - %s\n\n",
 						CmdRecPtr->cmdNameOrig, CmdRecPtr->cmdDesc );
 
-	if ((CmdRecPtr->parmDef -- NULL) || (Atp_IsEmptyParmDef(CmdRecPtr)))
+	if ((CmdRecPtr->parmDef == NULL) || (Atp_IsEmptyParmDef(CmdRecPtr)))
 	{
 	  Atp_DisplayIndent(indent);
 	  Atp_AdvPrintf("No parameters\n");
@@ -380,7 +380,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 						 (ParmEntryPtr+1)->parmcode == ATP_ECS) ? "CASE" :
 						 parmTypeStr;
 
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(tmp)+2,
 				"%s (\"%s\" - %s)%s%s\n",
 				tmp,
@@ -395,7 +395,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 		}
 
 		case ATP_UNS_NUM:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent, indent+5,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent, indent+5,
 				"%s (\"%s\" - %s) [%lu to %lu]%s%s%s\n",
 				parmTypeStr,
 				ParmEntryPtr->Name,
@@ -423,7 +423,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 			break;
 
 		case ATP_BRP:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)	[%d to %d instances]%s%s%s\n",
 				parmTypeStr,
@@ -459,7 +459,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 			if (def_hex != NULL)
 			  Atp_DvsPrintf(&default_hex, " DEFAULT: {%s}", def_hex);
 
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)	[%d to %d bytes]%s%s%s\n",
 				parmTypeStr,
@@ -503,7 +503,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 			if (def_bcd != NULL)
 			  Atp_DvsPrintf(&default_bcd, " DEFAULT: {%s}", def_bcd);
 
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)	[%d to %d digits]%s%s%s\n",
 				parmTypeStr,
@@ -537,7 +537,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 		}
 
 		case ATP_NUM:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)	[%d to %d] %s%s%s\n",
 				parmTypeStr,
@@ -568,7 +568,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 		case ATP_STR: {
 			char *defstr = (char *)ParmEntryPtr->DataPointer;
 
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\n - %s)	[%d to %d characters]%s%s%s%s%s%s\n",
 				parmTypeStr,
@@ -598,7 +598,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 		}
 
 		case ATP_REAL:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)	[%g to %g] %s%s%s\n",
 				parmTypeStr,
@@ -618,7 +618,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 			break;
 
 		case ATP_BCH:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s {\"%s\" - %s)%s%s%s%s\n",
 				parmTypeStr,
@@ -636,7 +636,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 			break;
 
 		case ATP_BOOL:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)%s%s%s\n",
 				parmTypeStr,
@@ -651,7 +651,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 			break;
 
 		case ATP_KEYS:
-			Atp_PrintfWordwrap(Atp_AdvPrintf, -1, indent,
+			Atp_PrintfWordWrap(Atp_AdvPrintf, -1, indent,
 				indent+strlen(parmTypeStr)+2,
 				"%s (\"%s\" - %s)%s%s",
 				parmTypeStr,
@@ -683,7 +683,7 @@ Atp_DisplayParmEntry(indent, ParmDefPtr, ParmDefIndex)
 				Atp_AdvPrintf("\n");
 				Atp_DisplayIndent(column = indent + PD_INDENT);
 				column =
-				Atp_PrintfWordwrap(
+				Atp_PrintfWordWrap(
 					Atp_AdvPrintf, -1, column,
 					column+strlen(Keyword)+strlen(Default)+5,
 					"\"%s\"%s%s%s",
@@ -1191,7 +1191,7 @@ int Atp_DisplayCmdDescs(cmdrecs, count, name_width)
 
 	/* Display names and descriptions of commands. */
 	for (x = 0; x < count; x++) {
-	   Atp_PrintfWordwrap(Atp_AdvPrintf,
+	   Atp_PrintfWordWrap(Atp_AdvPrintf,
 						  -1, 1, name_width + 7,
 						  fmtstr,
 						  CmdRecs[x]->cmdNameOrig, CmdRecs[x]->cmdDesc);
@@ -1217,15 +1217,15 @@ int Atp_DisplayCmdDescs(cmdrecs, count, name_width)
 
 *********************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
-int Atp_CompareNames( char **spl, char **sp2 )
+int Atp_CompareNames( char **sp1, char **sp2 )
 #else
-int Atp_CompareNames(spl, sp2)
-	char **spl, **sp2;
+int Atp_CompareNames(sp1, sp2)
+	char **sp1, **sp2;
 #endif
 {
 	int result = 0;
 
-	result = Atp_Strcmp(*spl, *sp2);
+	result = Atp_Strcmp(*sp1, *sp2);
 
 	return result;
 }
@@ -1264,39 +1264,9 @@ int Atp_CompareCmdRecNames(rec1p, rec2p)
 	return result;
 }
 
-/*+********************************************************************
-
-	Function Name:		Atp_CompareNames
-
-	Copyright:			BNR Europe Limited,	1992, 1993
-						Bell-Northern Research
-						Northern Telecom
-
-	Description:		Name comparison routine for use with qsort.
-
-	Modifications:
-		Who			When					Description
-	---------	------------------	---------------------------
-	Alwyn Teh	16 September 1992	Initial	Creation
-
-****************************************************»****************-*/
-#if defined(__STDC__) || defined(__cplusplus)
-int Atp_CompareNames( char **sp1, char **sp2 )
-#else
-int Atp_CompareNames(sp1, sp2)
-	char **sp1, **sp2;
-#endif
-{
-	int result = 0;
-
-	result = Atp_Strcmp(*sp1, *sp2);
-
-	return result;
-}
-
 /*+*******************************************************************
 
-	Function Name:		Atp_PrintfWordwrap
+	Function Name:		Atp_PrintfWordWrap
 
 	Copyright:			BNR Europe Limited, 1994
 						Bell-Northern Research
@@ -1392,7 +1362,7 @@ int Atp_PrintfWordWrap( printf_function,
 	}
 	va_end(ap);
 
-	AtpJDvsPrintf(&string, format_string, ATP_FRAME_RELAY(callframe));
+	Atp_DvsPrintf(&string, format_string, ATP_FRAME_RELAY(callframe));
 
 	line = string;
 	column = start_column;

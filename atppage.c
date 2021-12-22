@@ -471,7 +471,7 @@ Atp_Result Atp_PagerCmd(va_alist)
 #endif
 	va_end(ap);
 
-	switch(i = Atp_Kum("pager")) {
+	switch(i = Atp_Num("pager")) {
 		case PAGER_MORE :	pager = "more -"; /* must be in $PATH */
 							break;
 		case PAGER_PAGE :	pager = "page -"; /* must be in $PATH */

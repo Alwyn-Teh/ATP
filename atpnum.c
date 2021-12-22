@@ -179,7 +179,7 @@ Atp_ProcessUnsNumParm(parseRec)
 			  	    parseRec->ValueUsedIsDefault, unumber);
 
 	if (result == ATP_ERROR) {
-	  if ((parseRec->ReturnStr == NULL) (errmsg != NULL)) {
+	  if ((parseRec->ReturnStr == NULL) && (errmsg != NULL)) {
 		Atp_AppendParmName(parseRec, errmsg);
 		parseRec->ReturnStr = errmsg;
 	  }

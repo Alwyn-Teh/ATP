@@ -63,7 +63,7 @@
 	Alwyn Teh	21 July 1994		Unify HELP system by single
 									point access via "help" command
 	Alwyn Teh	3 August 1994		Wrap and indent long lines
-									using Atp_PrintfWordwrap().
+									using Atp_PrintfWordWrap().
 	Alwyn Teh	8 March 1995		Use stdarg.h instead of
 									varargs.h for ANSI compliance.
 	Alwyn Teh	27 March 1995		Add BCD digits parameter type.
@@ -295,7 +295,7 @@ va_dcl
 	/* Command does not exists. */
 	if (CmdEntryPtr == NULL) {
 	/* See if language manpage (e.g. Tcl) required. */
-	  if (Atp_SCrcmp(NameOfFrontEndToAtpAdaptor, cmdname) == 0) {
+	  if (Atp_Strcmp(NameOfFrontEndToAtpAdaptor, cmdname) == 0) {
 		if (Atp_GetFrontEndManpage != NULL) {
 		  Atp_Result result = ATP_OK;
 		  result = (*Atp_GetFrontEndManpage)(ATP_FRAME_RELAY(callframe));
@@ -387,12 +387,12 @@ Atp_GenerateParmDefManPage(CmdRecPtr)
 	  return error_msg;
 	}
 
-	Atp__AdvPrintf ("\nNAME\n") ;
+	Atp_AdvPrintf ("\nNAME\n") ;
 	column = 1;
 	Atp_DisplayIndent(indent);
 	column = indent;
 	column =
-	Atp_PrintfWordwrap(	Atp_AdvPrintf, column_limit, indent,
+	Atp_PrintfWordWrap(	Atp_AdvPrintf, column_limit, indent,
 						strlen(CmdRecPtr->cmdNameOrig) + indent + 3,
 						"%s - %s\n",
 						CmdRecPtr->cmdNameOrig, CmdRecPtr->cmdDesc );
@@ -623,7 +623,7 @@ parent_section_number, indent)
 
 	/* Display parameter name and description */
 	column =
-	Atp_PrintfWordwrap(	Atp_AdvPrintf,
+	Atp_PrintfWordWrap(	Atp_AdvPrintf,
 						-1, start_column,
 						start_column+strlen(parmdef[parm_index].Name)+5,
 						"<%s> - \"%s\"\n\n",
@@ -650,7 +650,7 @@ parent_section_number, indent)
 	if (isAtpBeginConstruct(CurrParmCode)) {
 	  Atp_AdvPrintf("<%s> ::=", parmdef[parm_index].Name);
 	  column += strlen(parmdef[parm_index].Name) + 6;
-	  Atp_PrintParrasInNotationFormat(parmdef, parm_index, NULL, column+2);
+	  Atp_PrintParmsInNotationFormat(parmdef, parm_index, NULL, column+2);
 
 	  if (parm_index_ptr != NULL)
 		*parm_index_ptr = parmdef[parm_index].matchIndex;
@@ -720,7 +720,7 @@ Atp_PrintParmTypeAndRange (parmdef entry_ptr, indent)
 					parmdefentry_ptr->KeyTabPtr[0].keyword != NULL)
 				{
 				  Atp_AdvPrintf("\n");
-				  Atp_EnumerateProtocolPieldValues(parmdefentry_ptr->KeyTabPtr, indent);
+				  Atp_EnumerateProtocolFieldValues(parmdefentry_ptr->KeyTabPtr, indent);
 				}
 
 				break;
@@ -807,7 +807,7 @@ Atp_PrintParmTypeAndRange (parmdef entry_ptr, indent)
 								 (Atp_NumType)parmdefentry_ptr->Min,
 								 (Atp_NumType)parmdefentry_ptr->Max);
 
-				column = Atp_PrintfWordwrap(Atp_AdvPrintf,
+				column = Atp_PrintfWordWrap(Atp_AdvPrintf,
 											-1, column, indent+3,
 											"%s %s", head, tail);
 				break;
@@ -869,7 +869,7 @@ Atp_PrintParmTypeAndRange (parmdef entry_ptr, indent)
 						  char *Keydesc = (parmdefentry_ptr->KeyTabPtr)
 												[index].KeywordDescription;
 						  column =
-						  Atp_PrintfWordwrap(Atp_AdvPrintf, -1,
+						  Atp_PrintfWordWrap(Atp_AdvPrintf, -1,
 											 column,
 											 indent+9+strlen(Keyword)+5,
 											 "%s is \"%s\"",
@@ -971,7 +971,7 @@ Atp_PrintOptionalDefault(parmdef, index, indent)
 	    	break;
 	    case ATP_STR: {
 	    	char *str = (char *)parmdef[index].DataPointer;
-	    	column = Atp_PrintfWordwrap(Atp_AdvPrintf, -1, column, indent+3,
+	    	column = Atp_PrintfWordWrap(Atp_AdvPrintf, -1, column, indent+3,
 	    								"\"%s\"", (str == NULL) ? "" : str);
 	    	break;
 	    }
@@ -1036,7 +1036,7 @@ Atp_PrintOptionalDefault(parmdef, index, indent)
 			else
 			{
 			  column =
-			  Atp_PrintfWordwrap(Atp_AdvPrintf, -1, column, indent+3,
+			  Atp_PrintfWordWrap(Atp_AdvPrintf, -1, column, indent+3,
 					  	  	  	  "{%s}", bcd);
 			  FREE(bcd);
 			}
@@ -1352,7 +1352,7 @@ Atp_PrintChoiceInNotationFormat(parmdef, start_index, indent)
 		column += strlen(parmdef[parm_idx].Name) + 1;
 
 		/* Open square bracket to indicate optional parameter. */
-		if (AtpParmIsOptional(CurrParmCode) && isAtpRegularParra(CurrParmCode))
+		if (AtpParmIsOptional(CurrParmCode) && isAtpRegularParm(CurrParmCode))
 		{
 		  CheckCursorColumnAndWrapLine(2, local_indent);
 		  Atp_AdvPrintf (" [");
@@ -1614,7 +1614,7 @@ Atp_PrintConst ruetComponents(parmdef, start_index, parent_section_number, inden
 		  Atp_AdvPrintf("%s should be selected to indicate ", parmdef[parm_idx].Name);
 
 		  column += strlen(parmdef[parm_idx].Name) + 32;
-		  column = Atp_PrintfWordwrap(Atp_AdvPrintf,
+		  column = Atp_PrintfWordWrap(Atp_AdvPrintf,
 									  column_limit, column,
 									  local_indent + 3,
 									  "\"%s\"\n", parmdef [parm_idx] .Desc);
@@ -1652,7 +1652,7 @@ Atp_PrintConst ruetComponents(parmdef, start_index, parent_section_number, inden
 			  column = local_indent;
 			  where_line_used = 0; /* unset flag */
 			}
-			column = Atp_PrintfWordwrap(Atp_AdvPrintf,
+			column = Atp_PrintfWordWrap(Atp_AdvPrintf,
 										-1, column, local_indent+3,
 										"<%s> is \"%sV', ",
 										parmdef[parm_idx] .Name,
@@ -1687,7 +1687,7 @@ Atp_PrintConst ruetComponents(parmdef, start_index, parent_section_number, inden
 			Atp_DisplayIndent(local_indent);
 			column = local_indent;
 
-			column = Atp_PrintfWordwrap(Atp_AdvPrintf,
+			column = Atp_PrintfWordWrap(Atp_AdvPrintf,
 							-1, column, local_indent+3,
 							"<%s> is \"%s\",",
 							parmdef[parm_idx].Name,
@@ -1966,7 +1966,7 @@ Atp_EnumerateProtocolFieldValues(KeyTabPtr, indent)
 	   /* Print current line */
 	   cur_desc = KeyTabPtr[x].KeywordDescription;
 	   cur_desc = (cur_desc == 0 || *cur_desc == '\0') ? "?" : cur_desc;
-	   Atp_PrintfWordwrap(	myprintf, -1, start_column, final_indent,
+	   Atp_PrintfWordWrap(	myprintf, -1, start_column, final_indent,
 							fmtstr,
 							KeyTabPtr[x].KeyValue,
 							binary_string(KeyTabPtr[x].KeyValue, 0, cur_bitwidth),

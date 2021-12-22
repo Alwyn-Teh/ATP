@@ -62,7 +62,7 @@ int		AutoTest_Loop	_PROTO_(( Tcl_Interp *interp ));
 /*
 	Thu Aug 4 14:14:00 BST 1994 by alteh (ACST.138)
 
-	New library function Atp_PrintfWordwrap() available for trial. Used for
+	New library function Atp_PrintfWordWrap() available for trial. Used for
 	wrapping long lines and indenting wrapped lines. Does not right justify
 	and space out words. Assumes no newlines or positional characters in
 	string to be printed except for trailing newlines only.
@@ -902,7 +902,7 @@ Atp_ByteType Default_DataBytes[] = {0x44,0x45,0x46,0x41,0x55,0x4c,0x54};
  *
  *	Assign the default to a Atp_DataDescriptor.
  */
-Atp_DataDescriptor Default_DataBytesVar = (7, Default_DataBytes);
+Atp_DataDescriptor Default_DataBytesVar = {7, Default_DataBytes};
 
 #if defined(__STDC__) || defined(__cplusplus)
 static char * CheckPrintable( void *valPtr, Atp_BoolType isUserValue )
@@ -1725,9 +1725,9 @@ Atp_Result RecurCmd(clientData, interp, argc, argv)
 	char		*argv[];
 #endif
 {
-	static	level = -1;
-	char *	return_string = NULL;
-	int		result = 0;
+	static int	level = -1;
+	char *		return_string = NULL;
+	int			result = 0;
 
 	level++;
 
@@ -2021,7 +2021,7 @@ Atp_Result LLC_Cmd(clientData, interp, argc, argv)
 		if (i == 0)
 		{
 			/* Octet 5a */
-			Atp_AdvPrintf ("Octet 5a: "),-
+			Atp_AdvPrintf ("Octet 5a: ");
 			Atp_AdvPrintf("rate = %d, ", Atp_Num("rate"));
 			Atp_AdvPrintf("neg = %d, ", Atp_Num("neg"));
 			Atp_AdvPrintf("sync = %d, ", Atp_Num("sync"));
@@ -2158,7 +2158,7 @@ ATP_END_DCL_PARMDEF
 /*
 	The header and footer have been changed to contain single lines per
 	paragraph so that the help command will wrap them automatically using
-	Atp_PrintfWordwrap(). This provides a simple sanity check for the
+	Atp_PrintfWordWrap(). This provides a simple sanity check for the
 	wrap function.
 */
 char *estimate_desc_header[] = {
@@ -2433,7 +2433,7 @@ Atp_Result QueryCmd{clientData, interp, argc, argv)
 
 	return_string = Atp_AdvGets();
 
-	Tcl_SetResult(interp, return_stringf TCL_DYNAMIC);
+	Tcl_SetResult(interp, return_string, TCL_DYNAMIC);
 
 	return ATP_OK;
 }
@@ -2543,7 +2543,7 @@ Atp_Result NullCmd(clientData, interp, argc, argv)
 
 	parmptr = (Atp_NumType *) Atp_ParmPtr("null");
 	if (parmptr != NULL) {
-	  parmvalue = *parmptr,-
+	  parmvalue = *parmptr;
 	  (void) sprintf(cmd_result, "null = %d (%s)", parmvalue,
 			  	  	 (parmvalue == 0) ? "PASS" : "FAIL");
 	  Tcl_SetResult(interp, cmd_result, TCL_STATIC);
@@ -2819,9 +2819,9 @@ Atp_Result LogtestCmd(clientData, interp, argc, argv)
 				break;
 			case LOGTEST_SETTESTDESC:
 				if (Atp_Logtest_Description != NULL)
-				FREE((void *)Atp_Logtest_Description);
+				  FREE((void *)Atp_Logtest_Description);
 				Atp_Logtest_Description =
-				Atp_Strdup(Atp_Str("description")) ;
+				  Atp_Strdup(Atp_Str("description")) ;
 				break;
 			case LOGTEST_SETTESTCOUNT:
 				Atp_Logtest_Count = (int) Atp_Num("count");
@@ -3076,7 +3076,7 @@ char * CheckType(attribute)
 
 		case ATP_BPM: case ATP_EPM:
 		case ATP_BLS: case ATP_ELS:
-		case ATP_BCH: case ATP_BCH:
+		case ATP_BCH: case ATP_ECH:
 		case ATP_ERP:
 		case ATP_BCS: case ATP_ECS:
 		case ATP_NULL:
@@ -3324,7 +3324,7 @@ int main(argc, argv)
 	 *	the use of multiple interpreters. If there is a requirement,
 	 *	please submit your request.
 	 */
-	interp = Tcl_Createlnterp();
+	interp = Tcl_CreateInterp();
 
 	/* See if atpexmp invoked with -oAutoTest option. */
 	if ((argc == 2) && (strcmp(argv[1] , "-oAutoTest") == 0))
@@ -3541,7 +3541,7 @@ int main(argc, argv)
 
 	/* Add copyright information to help system (this is up to you). */
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "copyright", Atp_Copyright);
-	Atp_AddHelplnfo(ATP_HELP_AREA_SUMMARY, "copyright", Tcl_Copyright);
+	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "copyright", Tcl_Copyright);
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "copyright", Slp_Copyright);
 
 	/* Add help information to logtest manpage. */

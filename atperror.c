@@ -607,7 +607,7 @@ char * Atp_MakeErrorMsg(file_name, line_number, error_code, va_alist)
 	Alwyn Teh	25 July 1992	Initial Creation
 	Alwyn Teh	7 June 1993		Use Atp_AdvPrintf().
 	Alwyn Teh	9 August 1994	Wrap and indent long lines
-								using Atp_PrintfWordwrap().
+								using Atp_PrintfWordWrap().
 
 ********************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
@@ -634,7 +634,7 @@ VPrintErrorDescRec(err_rec, args)
 
 	if (err_rec.errmsg_fmtstr != NULL) {
 	  Atp_CopyCallFrame(&frame, args);
-	  Atp_PrintfWordwrap(Atp_AdvPrintf,
+	  Atp_PrintfWordWrap(Atp_AdvPrintf,
 						 -1, start_column, 8, /* tab position */
 						 err_rec.errmsg_fmtstr, ATP_FRAME_RELAY(frame));
 	}
@@ -642,19 +642,19 @@ VPrintErrorDescRec(err_rec, args)
 	Atp_AdvPrintf("\n");
 
 	if (err_rec.user_attention != NULL)
-	  Atp_PrintfWordwrap(Atp_AdvPrintf, -1, 1, 8,
+	  Atp_PrintfWordWrap(Atp_AdvPrintf, -1, 1, 8,
 			  	  	  	 "\t%s\n", err_rec.user_attention) ;
 
 	if (err_rec.system_status != NULL)
-	  Atp_PrintfWordwrap(Atp_AdvPrintf, -1, 1, 8,
+	  Atp_PrintfWordWrap(Atp_AdvPrintf, -1, 1, 8,
 			  	  	  	 "\t%s\n", err_rec.system_status);
 
 	if (err_rec.recovery_suggestion != NULL)
-	  Atp_PrintfWordwrap(Atp_AdvPrintf, -1, 1, 8,
+	  Atp_PrintfWordWrap(Atp_AdvPrintf, -1, 1, 8,
 			  	  	  	 "\t%s\n", err_rec.recovery_suggestion);
 
 	if (err_rec.user_action != NULL)
-	  Atp_PrintfWordwrap(Atp_AdvPrintf, -1, 1, 8,
+	  Atp_PrintfWordWrap(Atp_AdvPrintf, -1, 1, 8,
 			  	  	  	 "\t%s\n", err_rec.user_action);
 
 	return;

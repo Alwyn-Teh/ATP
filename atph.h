@@ -1024,16 +1024,13 @@ EXTERN int Atp_Adaptor_FrontEnd_ReturnCode_ERROR;
 #define Atp_Bool(parmname)				Atp_RetrieveBoolParm(parmname, ATP_ERRLOC)
 #define Atp_Str(parmname)				Atp_RetrieveStrParm(parmname, ATP_ERRLOC)
 
-#define Atp_DataBytes(parmname, count) \
-										Atp_RetrieveDataBytesParm(parmname, count, ATP_ERRLOC)
+#define Atp_DataBytes(parmname, count)	Atp_RetrieveDataBytesParm(parmname, count, ATP_ERRLOC)
 #define Atp_DataBytesDesc(parmname)		Atp_RetrieveDataBytesDescriptor(parmname, ATP_ERRLOC)
-#define Atp_BcdDigits(parmname, count) \
-										Atp_RetrieveBcdDigitsParm(parmname, count, ATP_ERRLOC)
+#define Atp_BcdDigits(parmname, count)	Atp_RetrieveBcdDigitsParm(parmname, count, ATP_ERRLOC)
 #define Atp_BcdDigitsDesc(parmname)		Atp_RetrieveBcdDigitsDescriptor(parmname, ATP_ERRLOC)
 #define Atp_ParmPtr(parmname)			Atp_RetrieveParm(parmname, ATP_ERRLOC)
 #define Atp_RptBlockPtr(name, count)	Atp_RetrieveRptBlk(name, count, ATP_ERRLOC)
-#define Atp_RptBlockDesc(name) \
-						Atp_RetrieveRptBlkDescriptor(name, ATP_ERRLOC)
+#define Atp_RptBlockDesc(name)			Atp_RetrieveRptBlkDescriptor(name, ATP_ERRLOC)
 
 EXTERN Atp_NumType		Atp_RetrieveNumParm _PROTO_((char *NumericParmName,
 													 char *filename,
@@ -1155,7 +1152,7 @@ EXTERN int		Atp_AdvSetDefBufsize _PROTO_( (int size));
 EXTERN int		Atp_AdvGetBufsize _PROTO_((void));
 EXTERN int		Atp_AdvGetDefBufsize _PROTO_((void));
 EXTERN int		Atp_AdvResetDefBufsize _PROTO_((void));
-EXTERN int		Atp_PrintfWordwrap _PROTO_(
+EXTERN int		Atp_PrintfWordWrap _PROTO_(
 									( int (*printf_function)(char *fmtstr, ...),
 									  int screen_width,
 									  int start_column,

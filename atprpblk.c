@@ -460,7 +460,7 @@ Atp_ParseRptBlkMarker(src, parmcode, errmsg)
 	else
 	if ((parmcode == ATP_BRP) &&
 		(src[0] == ATP_OPEN_REPEAT_BLOCK) &&
-		(src[1] == ATP_CLOSE_REPEAT_BLOCK)
+		(src[1] == ATP_CLOSE_REPEAT_BLOCK) &&
 		(src[2] == '\0'))
 	{
 	  /*

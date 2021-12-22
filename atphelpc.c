@@ -1121,7 +1121,7 @@ void Atp_DisplayHelpInfo(helpPtr, indent)
 		 if (x > 0) Atp_AdvPrintf ("\n");
 		 for (y=0; textPtr[y] != NULL; y++) {
 			Atp_DisplayIndent(indent);
-			Atp_PrintfWordwrap(Atp_AdvPrintf,
+			Atp_PrintfWordWrap(Atp_AdvPrintf,
 								-1, indent, indent,
 								"%s\n", textPtr[y]);
 		 }
@@ -1216,7 +1216,7 @@ void Atp_DisplayCmdHelpInfo(CmdRecPtr, text_type, indent)
 									of help parmdef
 	Alwyn Teh	27 July 1994		Display help functions and
 									areas separately.
-	Alwyn Teh	2 August 1994		Use Atp_PrintfWordwrap () to
+	Alwyn Teh	2 August 1994		Use Atp_PrintfWordWrap () to
 									wrap possibly long strings.
 
 *******************************************************************-*/
@@ -1326,7 +1326,7 @@ Atp_Result Atp_HelpCmd(clientData, callback, HelpPageReturnPtr)
 						    Atp_AdvPrintf("\n");
 						  }
 
-						  Atp_PrintfWordwrap(Atp_AdvPrintf,
+						  Atp_PrintfWordWrap(Atp_AdvPrintf,
 											 -1, 1, 0, "%s",
 											 FrontEndManPgHelpInstr);
 						  Atp_AdvPrintf("\n");
@@ -1395,7 +1395,7 @@ static void Atp_ListHelpAreas()
 	table = (struct Table *)CALLOC(tablesize, sizeof(struct Table), NULL);
 
 	/* Measure name width and append table entries. */
-	width - len = i = j = 0;
+	width = len = i = j = 0;
 	for (x = 2; Atp_PARMCODE(Atp_HelpCmdParmsPtr[x].parmcode) != ATP_ECH;
 		 x += 2)
 	{
@@ -1419,7 +1419,7 @@ static void Atp_ListHelpAreas()
 	(void) sprintf(fmtstr, "	%%-%ds	-	%%s\n", width);
 	Atp_AdvPrintf("\nHelp functions:\n\n");
 	for (x = 0; x < j; x++) {
-	   Atp_PrintfWordwrap(Atp_AdvPrintf,
+	   Atp_PrintfWordWrap(Atp_AdvPrintf,
 						  -1 /* unknown screen width */, 1, width+7,
 						  fmtstr, table[x].helpName, table[x].helpDesc);
 	  FREE(table[x].helpName);
@@ -1432,7 +1432,7 @@ static void Atp_ListHelpAreas()
 	}
 	(void) sprintf(fmtstr, "	%%-%ds	-	%%s\n", width);
 	for (x = save; x < i; x++) {
-	   Atp_PrintfWordwrap(Atp_AdvPrintf, -1, 1, width+7,
+	   Atp_PrintfWordWrap(Atp_AdvPrintf, -1, 1, width+7,
 			   	   	   	  fmtstr, table[x].helpName, table[x].helpDesc);
 	   FREE(table[x].helpName);
 	}
@@ -1509,7 +1509,7 @@ static void Atp_ShowAllCommands()
 		while (Atp_HelpParmDef[i].parmcode != ATP_BCS) i++;
 		helpRec = (Atp_HelpInfoType *) Atp_HelpCmdParmsPtr[i].DataPointer;
 		if (helpRec != NULL && helpRec->cmdRecs != NULL) {
-		  Atp_PrintfWordwrap(Atp_AdvPrintf,
+		  Atp_PrintfWordWrap(Atp_AdvPrintf,
 				  	  	  	  -1, 1, strlen(Atp_HelpCmdParmsPtr[i].Name) + 3,
 							  "%s - %s:\n",
 							  Atp_HelpCmdParmsPtr[i].Name,
@@ -1543,7 +1543,7 @@ static void Atp_FindHelpOnCommand()
 
 	  Atp_AdvPrintf("Description -\n");
 	  Atp_DisplayIndent(ATP_MANPG_INDENT); /* align with synopsis below */
-	  Atp_PrintfWordwrap(Atp_AdvPrintf,
+	  Atp_PrintfWordWrap(Atp_AdvPrintf,
 						 -1, ATP_MANPG_INDENT, ATP_MANPG_INDENT,
 						 "%s\n\n", FoundCmdNameRecPtr->cmdDesc);
 	  Atp_DisplayCmdHelpInfo((Atp_CmdRec *)FoundCmdNameRecPtr,
@@ -1611,7 +1611,7 @@ static void Atp_SearchByKeyword(BuiltInCmds, UserProcs, AtpApplCmds)
 	  BuiltInCmds[j] = NULL; /* NULL terminate */
 
 	  if (found) {
-	    Atp_PrintfWordwrap(Atp_AdvPrintf, -1, 1, 0,
+	    Atp_PrintfWordWrap(Atp_AdvPrintf, -1, 1, 0,
 						   "\n%s commands matching keyword \"%s\":\n\n",
 						   NameOfFrontEndToAtpAdaptor, s2);
 	    Atp_DisplayCommands((void **)BuiltInCmds,
@@ -1648,7 +1648,7 @@ static void Atp_SearchByKeyword(BuiltInCmds, UserProcs, AtpApplCmds)
 	  UserProcs[j] = NULL; /* NULL terminate */
 
 	  if (found) {
-		Atp_PrintfWordwrap( Atp_AdvPrintf, -1, 1, 0,
+		Atp_PrintfWordWrap( Atp_AdvPrintf, -1, 1, 0,
 							"\n%s application commands and %s \"%s\":\n\n",
 							NameOfFrontEndToAtpAdaptor,
 							"user-defined procedures matching keyword", s2);
@@ -1712,7 +1712,7 @@ static void Atp_SearchByKeyword(BuiltInCmds, UserProcs, AtpApplCmds)
 	  AtpApplCmds[j] = NULL; /* NULL terminate list */
 
 	  if (found) {
-		Atp_PrintfWordwrap( Atp_AdvPrintf, -1, 1, 0,
+		Atp_PrintfWordWrap( Atp_AdvPrintf, -1, 1, 0,
 							"\nATP Commands / Descriptions %s \"%s\”:\n\n",
 							"matching keyword", s2);
 		Atp_DisplayCmdDescs(AtpApplCmds, 0, 0);
@@ -1769,7 +1769,7 @@ static void Atp_GetHelpOnVersion()
 	 *	Add version information to help area.
 	 *	Application using ATP may have its own help info to add here.
 	 */
-	Atp_AddHeIpInfo(ATP_HELP_AREA_SUMMARY,
+	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY,
 					ATP_HELPCMD_OPTION_VERSION,
 					Atp_VersionInfo);
 	}
@@ -1798,7 +1798,7 @@ static void Atp_GetHelpOnArea(HelpCaseIndex)
 
 	  /* Display help summary for help area if available. */
 	  if (HelpInfoRecPtr->HelpAreaDesc != NULL) {
-		Atp_PrintfWordwrap(	Atp_AdvPrintf,
+		Atp_PrintfWordWrap(	Atp_AdvPrintf,
 							-1, 1, 2,
 							"Help information on \"%s\" (%s):\n\n",
 							HelpKeyTab[HelpCaseIndex].keyword,
@@ -1809,14 +1809,14 @@ static void Atp_GetHelpOnArea(HelpCaseIndex)
 
 	  /* If help area contains commands, list them. */
 	  if (HelpInfoRecPtr->cmdRecs != NULL) {
-		Atp_PrintfWordwrap(	Atp_AdvPrintf,
+		Atp_PrintfWordWrap(	Atp_AdvPrintf,
 							-1, 1, 2,
 							"List of commands for \"%s\"%s%s%s:\n\n",
 							HelpKeyTab[HelpCaseIndex].keyword,
 							(DescPrinted)? "" : " (",
 							(DescPrinted)? "" : Atp_HelpParmDef[PD_idx].Desc,
 							(DescPrinted)? "" : ")");
-		Atp_DisplayCmdDeses(HelpInfoRecPtr->cmdRecs, 0, 0);
+		Atp_DisplayCmdDescs(HelpInfoRecPtr->cmdRecs, 0, 0);
 		Atp_AdvPrintf("\n%s\n", Atp_HelpInstructions[ATP_HELP_INSTR_CMD]);
 	  }
 	}

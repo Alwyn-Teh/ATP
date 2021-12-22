@@ -215,7 +215,7 @@ Atp_ParseBoolean(src, boolValPtr, boolStrPtr, ErrorMsgPtr)
 
 ********************************************************************-*/
 #if defined(__STDC__) || defined (__cplusplus)
-Atp_BoolType Atp_RetrieveBoo1Parm
+Atp_BoolType Atp_RetrieveBoolParm
 (
 	char	*BooleanParmName,
 	char	*filename,

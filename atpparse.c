@@ -233,7 +233,7 @@ return_string_ptr, parmstore_ptr)
 	    *return_string_ptr = Atp_GetHyperSpaceMsg();
 
 	  Atp_PopParmStorePtrFromStack(parmstore);
-	  Atp_PreeParmStore(parmstore);
+	  Atp_FreeParmStore(parmstore);
 
 	  return ATP_ERROR;
 	}
