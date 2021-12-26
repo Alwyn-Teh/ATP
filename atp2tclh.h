@@ -16,7 +16,7 @@
 #ifndef _ATP2TCL
 #define _ATP2TCL
 
-#define ATP2TCL_VERSION "1.1"
+#define ATP2TCL_VERSION "1.2"
 
 #include <tcl.h>
 
@@ -82,16 +82,16 @@
 
 #ifdef DEBUG
 #define Atp2Tcl_CreateCommand(interp,name,desc,help_id,cb,pd,cd,delProc) \
-				Atp2Tcl_InternalCreateCommand (interp, name, desc,	\
-				help_id,cb,pd,Atp_NoOfPDentries(pd),\
-				cd,delProc, \
-				__FILE__, __LINE__, 0)
+				Atp2Tcl_InternalCreateCommand(interp, name, desc,	\
+												help_id,cb,pd,Atp_NoOfPDentries(pd),\
+												cd,delProc, \
+												__FILE__, __LINE__, 0)
 #else
 #define Atp2Tcl_CreateCommand(interp,name,desc,help_id,cb,pd,cd,delProc) \
 				Atp2Tcl_InternalCreateCommand(interp,name,desc,	\
-				help_id,cb,pd,Atp_NoOfPDentries(pd),\
-				cd,delProc, \
-				(char *)0, 0, 0)
+												help_id,cb,pd,Atp_NoOfPDentries(pd),\
+												cd,delProc, \
+												(char *) 0, 0, 0)
 #endif
 
 EXTERN Atp_Result	Atp2Tcl_Init _PROTO_((Tcl_Interp *interp));

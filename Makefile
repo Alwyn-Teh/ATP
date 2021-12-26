@@ -1,6 +1,6 @@
-CC=gcc
+CC=gcc -g
 CFLAGS=-I. -I../../eclipse-workspace-cpp-slp/SLP
-LDFLAGS=-O -L. -L../../eclipse-workspace-cpp-slp/SLP
+LDFLAGS=-L. -L../../eclipse-workspace-cpp-slp/SLP
 RM = rm -f
 RANLIB = ranlib
 AR = ar rcul

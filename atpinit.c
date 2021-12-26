@@ -174,7 +174,7 @@ Atp_AssembleCmdRecord(name,desc,cb,pd,ne,cd)
 	xcmd->NoOfPDentries	= ne;
 	xcmd->clientData	= cd;
 
-	xcmd->Atp_ID_Code	=ATP_IDENTIFIER_CODE;
+	xcmd->Atp_ID_Code	= ATP_IDENTIFIER_CODE;
 
 	return (Atp_CmdRec *)xcmd;
 }
@@ -315,7 +315,7 @@ void Atp_Initialise()
 #if __STDC__ || hpux
 		atexit(Atp_CleanupProc);
 #else
-#  if sun | | sun2 | | sun3 | | sun4
+#  if sun || sun2 || sun3 || sun4
 		on_exit(Atp_CleanupProc);
 #  endif
 #endif
@@ -329,7 +329,7 @@ void Atp_Initialise()
 						Bell-Northern Research
 						Northern Telecom
 
-	Description:	Creates and maintains ATP command groups.
+	Description:		Creates and maintains ATP command groups.
 
 	Modifications:
 		Who			When				Description

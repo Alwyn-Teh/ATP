@@ -36,7 +36,7 @@
 /*
  * Copyright information on Tcl.
  */
-char ** Tcl_Copyright;
+char ** Tcl_Copyright = NULL;
 
 static char tclversion[10];
 
@@ -49,112 +49,83 @@ static char	*anonftpsun	= "	Anonymous		ftp: ftp.smli.com:/pub/tcl";
 static char *anonftpucb = "					ftp.cs.berkeley.edu:/ucb/tcl";
 static char *tclwwwpage = " Tcl Home Page:	http://www.sunlabs.com/research/tcl/\n";
 
-static char * Tcl_Copyright_7_3[] = {
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+static char *Tcl_Copyright_8_6[] = {
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 
-	"  Copyright (c) 1987-1994 The Regents of the University of California.",
-	"  All rights reserved.\n",
-
-	"    Permission is hereby granted, without written agreement and",
-	"    without license or royalty fees, to use, copy, modify, and",
-	"    distribute this software and its documentation for any",
-	"    purpose, provided that the above copyright notice and the",
-	"    following two paragraphs appear in all copies of this",
-	"    software.\n",
-
-	"    IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO",
-	"    ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR",
-	"    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS",
-	"    SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF",
-	"    CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH",
-	"    DAMAGE.\n",
-
-	"    THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY",
-	"    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED",
-	"    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR",
-	"    PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN \"AS IS\n",
-	"    BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATION TO",
-	"    PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR",
-	"    MODIFICATIONS.\n",
-
-	NULL
-};
-
-static char * Tcl_Copyright_7_4 [] = {
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-
-	"  Copyright (c) 1987-1994 The Regents of the University of California.",
-	"  Copyright (c) 1994-1995 Sun Microsystems, Inc.\n",
-
-	"    This software is copyrighted by the Regents of the",
-	"    University of California, Sun Microsystems, Inc., and other",
-	"    parties. The following terms apply to all files associated",
-	"    with the software unless explicitly disclaimed in individual",
-	"    files.\n",
-
-	"    The authors hereby grant permission to use, copy, modify,",
-	"    distribute, and license this software and its documentation",
-	"    for any purpose, provided that existing copyright notices",
-	"    are retained in all copies and that this notice is included",
-	"    verbatim in any distributions. No written agreement,",
-	"    license, or royalty fee is required for any of the",
-	"    authorized uses. Modifications to this software may be",
-	"    copyrighted by their authors and need not follow the",
-	"    licensing terms described here, provided that the new terms",
-	"    are clearly indicated on the first page of each file where",
-	"    they apply.\n",
-
-	"    IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO",
-	"    ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR",
-	"    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS",
-	"    SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,",
-	"    EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF",
-	"    SUCH DAMAGE.\n",
-
-	"    THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY",
-	"    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED",
-	"    WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR",
-	"    PURPOSE, AND NON-INFRINGEMENT. THIS SOFTWARE IS PROVIDED ON",
-	"    AN \"AS IS\" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE NO",
-	"    OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,",
-	"    ENHANCEMENTS, OR MODIFICATIONS.\n",
-
-	"    RESTRICTED RIGHTS: Use, duplication or disclosure by the",
-	"    government is subject to the restrictions as set forth in",
-	"    subparagraph {c) (1) (ii) of the Rights in Technical Data",
-	"    and Computer Software Clause as DFARS 252.227-7013 and FAR",
-	"    52.227-19.",
-
-	NULL
+"		This software is copyrighted by the Regents of the University of",
+"		California, Sun Microsystems, Inc., Scriptics Corporation, ActiveState",
+"		Corporation and other parties.  The following terms apply to all files",
+"		associated with the software unless explicitly disclaimed in",
+"		individual files.",
+"",
+"		The authors hereby grant permission to use, copy, modify, distribute,",
+"		and license this software and its documentation for any purpose, provided",
+"		that existing copyright notices are retained in all copies and that this",
+"		notice is included verbatim in any distributions. No written agreement,",
+"		license, or royalty fee is required for any of the authorized uses.",
+"		Modifications to this software may be copyrighted by their authors",
+"		and need not follow the licensing terms described here, provided that",
+"		the new terms are clearly indicated on the first page of each file where",
+"		they apply.",
+"",
+"		IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY",
+"		FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES",
+"		ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY",
+"		DERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE",
+"		POSSIBILITY OF SUCH DAMAGE.",
+"",
+"		THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,",
+"		INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,",
+"		FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE",
+"		IS PROVIDED ON AN \"AS IS\" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE",
+"		NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR",
+"		MODIFICATIONS.",
+"",
+"		GOVERNMENT USE: If you are acquiring this software on behalf of the",
+"		U.S. government, the Government shall have only \"Restricted Rights\"",
+"		in the software and related documentation as defined in the Federal",
+"		Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you",
+"		are acquiring the software on behalf of the Department of Defense, the",
+"		software shall be classified as \"Commercial Computer Software\" and the",
+"		Government shall have only \"Restricted Rights\" as defined in Clause",
+"		252.227-7014 (b) (3) of DFARs.  Notwithstanding the foregoing, the",
+"		authors grant the U.S. Government and others acting in its behalf",
+"		permission to use and distribute the software in accordance with the",
+"		terms specified in this license.",
+""
 };
 
 /*
 	The following cloned and "hacked" data structures must mirror those
-	of struct Interp and struct Command found in tcllnt.h respectively.
+	of struct Namespace and struct Command found in tclInt.h
+	respectively.
 */
-typedef struct Hacked_Interp {
-	char			*filler_1;
-	void			*filler_2;
-	int				filler_3;
-	Tcl_HashTable	commandTable;
-} Hacked_Interp;
+typedef struct Hacked_Namespace {
+	char					*filler_1;
+	char					*filler_2;
+	ClientData				filler_3;
+	Tcl_NamespaceDeleteProc	*filler_4;
+	struct Hacked_Namespace	*filler_5;
+	Tcl_HashTable			filler_6;
+	long					filler_7;
+	Tcl_Interp				*filler_8;
+	int						filler_9;
+	int						filler_10;
+	int						filler_11;
+	Tcl_HashTable			cmdTable;
+} Hacked_Namespace;
 
-typedef struct Hacked_Command_7_3 {
-	void			*filler_A;
-	ClientData		clientData;	/* field used by ATP */
-	void			*filler_B;
-	ClientData		filler_C;
-} Hacked_Command_7_3;
-
-typedef struct Hacked_Command_7_4 {
-	void			*filler_A;
-	void			*filler_B;
-	ClientData		clientData;	/* field used by ATP */
-	void			*filler_C;
-	ClientData		filler_D;
-} Hacked_Command_7_4;
-
-static enum hacked_cmd_choice { HCMD73 = 73, HCMD74 = 74 } hacked_command_used;
+typedef struct Hacked_Command_8_6 {
+    Tcl_HashEntry		*filler_A;
+    Hacked_Namespace	*filler_B;
+    int					filler_C;
+    int					filler_D;
+    void				*filler_E;
+    Tcl_ObjCmdProc		*filler_F;
+    ClientData			filler_G;
+    Tcl_CmdProc			*filler_H;
+    ClientData			clientData;
+} Hacked_Command_8_6;
 
 /* Tcl callback interface returning Atp_Result instead of int */
 typedef Atp_Result	(*Atp2Tcl_CallbackType)_PROTO_((ClientData clientdata,
@@ -197,7 +168,7 @@ static char *	ManCmd_TclManPageHeader[] =	{
 
 	"See also:",
 	"    help -key <keyword> - search by keyword",
-	"    Tcl's \"exec\" command - usage e.g. V'exec man sh\"",
+	"    Tcl's \"exec\" command - usage e.g. \"exec man sh\"",
 
 	NULL
 };
@@ -229,7 +200,7 @@ static char *Atp2Tcl_HiddenCommands[] = {	"unknown",
 											"memory",
 											NULL };
 #else
-static char *Atp2Tcl_HiddenCommands [] = {	"unknown",
+static char *Atp2Tcl_HiddenCommands[] = {	"unknown",
 											NULL };
 
 #define MALLOC(size,fn)			malloc((size))
@@ -333,7 +304,7 @@ Atp_Result
 Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 							  callback, parmdef,
 							  sizeof_parmdef, clientdata, deleteproc,
-							  filename, 1inenumber, return_cmd_rec)
+							  filename, linenumber, return_cmd_rec)
 	Tcl_Interp			*interp;
 	char				*name, *desc;
 	int					help_id;
@@ -426,7 +397,7 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 	Description:		This function is the interface adaptor
 						between ATP and Tcl.
 
-						It is supplied by Atp2Tcl_CreateCoramand{) to
+						It is supplied by Atp2Tcl_CreateCommand() to
 						Tcl_CreateCommand() as the callback function
 						for Tcl to call when an Atp2Tcl command is
 						found. The actual command callback is
@@ -578,6 +549,8 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 									with Tcl v7.3 and v7.4. Do not
 									rely on compile time compat
 									using TCL_VERSION macro...etc.
+	Alwyn Teh	25 December 2021	Bring Atp2Tcl to be compatible
+									with Tcl 8.6.12
 
 *******************************************************************-*/
 #if defined(__STDC__) || defined(_cplusplus)
@@ -597,13 +570,16 @@ static void Do_Tcl_Version_Copyright_Stuff(interp)
 	if ( interp != NULL )
 	{
 		result = Tcl_Eval(interp, "info tclversion");
-		if (result == TCL_OK)
+		if (result == TCL_OK) {
 		  strcpy (tclversion, interp->result);
-		else
+		}
+		else {
 		  sprintf(tclversion, "%s", TCL_VERSION); /* should never happen */
+		}
 	}
-	else
+	else {
 	  sprintf(tclversion, "%s", TCL_VERSION); /* should never happen */
+	}
 
 	VersionOfFrontEndToAtpAdaptor = tclversion;
 
@@ -615,22 +591,15 @@ static void Do_Tcl_Version_Copyright_Stuff(interp)
 		Only one of the two banners will be used in one executable,
 		whether libatp.a linked at compile time or run-time.
 	*/
-	Tcl_Copyright_7_3[0] = tclheader;
-	Tcl_Copyright_7_4[0] = tclheader;
-	Tcl_Copyright_7_3[1] = Tcl_Copyright_7_4[1] = author;
-	Tcl_Copyright_7_3[2] = Tcl_Copyright_7_4[2] = email;
-	Tcl_Copyright_7_3[3] = Tcl_Copyright_7_4[3] = authorwww;
-	Tcl_Copyright_7_3[4] = Tcl_Copyright_7_4[4] = anonftpsun;
-	Tcl_Copyright_7_3[5] = Tcl_Copyright_7_4[5] = anonftpucb;
-	Tcl_Copyright_7_3[6] = Tcl_Copyright_7_4[6] = tclwwwpage;
+	Tcl_Copyright_8_6[0] = tclheader;
+	Tcl_Copyright_8_6[1] = author;
+	Tcl_Copyright_8_6[2] = email;
+	Tcl_Copyright_8_6[3] = authorwww;
+	Tcl_Copyright_8_6[4] = anonftpsun;
+	Tcl_Copyright_8_6[5] = anonftpucb;
+	Tcl_Copyright_8_6[6] = tclwwwpage;
 
-	if ( strncmp(tclversion, "7.3", 3) == 0 )
-	  Tcl_Copyright = Tcl_Copyright_7_3;
-	else
-	if ( strncmp (tclversion, "7.4", 3) == 0 )
-	  Tcl_Copyright = Tcl_Copyright_7_4;
-	else
-	  Tcl_Copyright = Tcl_Copyright_7_3; /* could be v6.7 */
+	Tcl_Copyright = Tcl_Copyright_8_6;
 
 	/* Check out the Interp structure. */
 	if ( interp != NULL )
@@ -645,66 +614,13 @@ static void Do_Tcl_Version_Copyright_Stuff(interp)
 		  if ( env_var != NULL )
 		    if ( strstr(env_var, "print_tcl_hashtable") != NULL )
 			  printf("Tcl Command Hash Table:\n%s\n", hashstats);
-		  free(hashstats);
 		}
 		else
 		{
 		  fprintf (stderr, "Unable to obtain Tcl command hash table.\n");
-		  goto atp2tcl_interface_error;
+		  exit(1);
 		}
 	}
-
-	/* Check out the Command structure. (v7.4 incompatible with v7.3) */
-	{
-		Tcl_Interp *test_iptr	= Tcl_CreateInterp();
-		Tcl_HashTable *tablePtr	= Atp2Tcl_GetTclCommandTable(test_iptr);
-		Tcl_HashEntry *entryPtr	= NULL;
-
-		void *TclCmdPtr	= NULL;
-		char *testcmd	= "_testing_";
-		char *in_data	= "_0123456789abcdefghijklmnopqrstuvwxyz_";
-		char *out_data	= NULL;
-
-		Tcl_CreateCommand(test_iptr, testcmd,
-						  (Tcl_CmdProc *) 0,
-						  (ClientData) in_data,
-						  (Tcl_CmdDeleteProc *)0);
-
-		entryPtr = Tcl_FindHashEntry(tablePtr, testcmd);
-		TclCmdPtr = (void *) Tcl_GetHashValue(entryPtr);
-
-		if ( strncmp(tclversion, "7.3", 3) == 0 || /* "current" version */
-			 strncmp(tclversion, "6.7", 2) == 0 )
-		{
-		  out_data = (char *) ((Hacked_Command_7_3 *)TclCmdPtr)->clientData;
-		  hacked_command_used = HCMD73;
-		}
-		else
-		  if ( strncmp(tclversion, "7.4", 3) == 0 || /* new/final version */
-			   strncmp(tclversion, "7.x", 2) == 0)	/* future Sun version? */
-		  {
-			out_data = (char *) ((Hacked_Command_7_4 *)TclCmdPtr)->clientData;
-			hacked_command_used = HCMD74;
-		  }
-		  else
-			hacked_command_used = HCMD74;
-
-		Tcl_DeleteInterp(test_iptr);
-
-		if ( out_data == NULL ||
-			(out_data != NULL && (out_data != in_data ||
-				(strcmp(out_data, in_data) != 0))) )
-		{
-		  fprintf(stderr, "Unable to pass clientdata through Tcl.\n");
-		  goto atp2tcl_interface_error;
-		}
-	}
-	return;
-
-atp2tcl_interface_error:
-	fprintf(stderr, "Error in interfacing ATP to Tcl interpreter.\n") ;
-	fprintf(stderr, "Adaptor software needs updating/modifying.\n");
-	exit(1);
 }
 
 #if defined(__STDC__) || defined(__cplusplus)
@@ -1079,6 +995,7 @@ Atp2Tcl_GetPager(interp)
 									  Atp_PagerParmsPtr,
 									  (ClientData) 0,
 									  (Tcl_CmdDeleteProc *) 0);
+
 		if (rc == ATP_OK)
 		  return pager_ptr;
 	}
@@ -1095,7 +1012,7 @@ Atp2Tcl_GetPager(interp)
 						Northern Telecom / NORTEL
 
 	Description:		Gets the Tcl command table by hacking at the
-						Tcl_Interp structure.
+						Tcl_Interp/Tcl_Namespace structure.
 
 	Parameters:			Tcl_Interp
 
@@ -1118,6 +1035,8 @@ Atp2Tcl_GetPager(interp)
 		Who			When					Description
 	----------	------------------	-----------------------------
 	Alwyn Teh	14 September 1992	Initial	Creation
+	Alwyn Teh	25 December 2021	Changed getting command table
+									from Interp to Namespace
 
 **********************************************************************/
 #if defined(__STDC__) || defined(__cplusplus)
@@ -1129,8 +1048,12 @@ Atp2Tcl_GetTclCommandTable(interp)
 	Tcl_Interp *interp;
 #endif
 {
-	return (Tcl_HashTable *)
-			&((Hacked_Interp *)interp)->commandTable;
+	Tcl_Namespace *	tcl_namespace = Tcl_GetGlobalNamespace(interp);
+	Hacked_Namespace * hacked_namespace = (Hacked_Namespace *) tcl_namespace;
+
+	Tcl_HashTable * commandTablePtr = &hacked_namespace->cmdTable;
+
+	return commandTablePtr;
 }
 
 /*+*******************************************************************
@@ -1138,7 +1061,7 @@ Atp2Tcl_GetTclCommandTable(interp)
 	Function Name:		Atp2Tcl_ExtractClientData
 
 	Copyright:			BNR Europe Limited, 1992
-						Be11-Northern Research
+						Bell-Northern Research
 						Northern Telecom / NORTEL
 
 	Description:		Extracts the clientdata field from the relayed
@@ -1177,11 +1100,11 @@ static void *
 Atp2Tcl_ExtractClientData( void * clientData, ... )
 #else
 static void *
-Atp2Tcl_Extract ClientData(c1ientData)
+Atp2Tcl_ExtractClientData(c1ientData)
 	void *	clientData;
 #endif
 /*
- * Unused arguments ignored: Tcl_lnterp *interp; int argc; char *argv[];
+ * Unused arguments ignored: Tcl_Interp *interp; int argc; char *argv[];
  */
 {
 	return clientData;
@@ -1460,6 +1383,8 @@ Atp2Tcl_GetCmdName(tablePtr, entryPtr)
 	Alwyn Teh	22 June 1995		Support Tcl 7.3 and 7.4
 									incompatible Command
 									discrimination at runtime.
+	Alwyn Teh	25 December 2021	Changed hacked Command version
+									to Tcl 8.6
 
 *******************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
@@ -1477,13 +1402,7 @@ static Atp_CmdRec *Atp2Tcl_GetAtpCmdRec( entryPtr )
 
 	TclCmdPtr = (void *) Tcl_GetHashValue((Tcl_HashEntry *)entryPtr);
 
-	if ( hacked_command_used == HCMD73 )
-		AtpCmdPtr = (Atp_CmdRec *)
-		((Hacked_Command_7_3 *)TclCmdPtr)->clientData;
-	else
-	if ( hacked_command_used == HCMD74 )
-		AtpCmdPtr = (Atp_CmdRec *)
-		((Hacked_Command_7_4 *)TclCmdPtr)->clientData;
+	AtpCmdPtr = (Atp_CmdRec *)((Hacked_Command_8_6 *)TclCmdPtr)->clientData;
 
 	return AtpCmdPtr;
 }

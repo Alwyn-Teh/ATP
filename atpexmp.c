@@ -3347,16 +3347,16 @@ int main(argc, argv)
 	init_result = Atp2Tcl_Init(interp);
 	if (init_result != ATP_OK) {
 	  (void) fprintf(stderr, "ATP initialisation error.\n");
-	  exit(1) ;
+	  exit(1);
 	}
 
 	/*
 	 *	Initialize frontend editor SLP (pronounced "slap").
 	 *
-	 *	Redefines 's "source" and "exit" commands.
+	 *	Redefines Tcl's "source" and "exit" commands.
 	 *	Creates "echo" command ( uses Tcl_Concat() ).
 	 *
-	 *	Calls Slp_SecTclInterp() to register Tcl interp with SLP.
+	 *	Calls Slp_SetTclInterp() to register Tcl interp with SLP.
 	 *	See also Slp_GetTclInterp() in Cleanup_Atpexmp().
 	 *
 	 *	SLP incorporates getline.c by Chris Thewalt of UCB.
@@ -3562,12 +3562,11 @@ int main(argc, argv)
 	 *	some Tcl commands have the same name as system commands (e.g.
 	 *	cd).
 	 */
-	Atp_AdvPrintf("MANPATH=/itdserv/Loads/hp80/tcl7.3/man");
-	Atp_AdvPrintf(":/users/genie/man");
-	Atp_AdvPrintf(":%s/man", getenv("HOME"));
+	Atp_AdvPrintf("MANPATH=/Users/alwynteh/dev/Tcl-Tk/tcl8.6.12/doc");
+	Atp_AdvPrintf(":%s/man", strdup(getenv("HOME")));
 	Atp_AdvPrintf(":~/man");
 	Atp_AdvPrintf(":/users/guest/man");
-	Atp_AdvPrintf(":%s", getenv("MANPATH")); /* do this last */
+	Atp_AdvPrintf(":%s", strdup(getenv("MANPATH"))); /* do this last */
 	putenv(manpath = Atp_AdvGets());
 
 	/* Defaults prompt to PROMPT. */
@@ -3606,17 +3605,18 @@ int main(argc, argv)
 	 *
 	 *	Slp_StdinHandler() obtains the current active  interp from
 	 *	Slp_GetTclInterp() in which to execute commands by calling
-	 *	Tcl_Eval{) (in the "source" command) or Tcl_RecordAndEval().
+	 *	Tcl_Eval() (in the "source" command) or Tcl_RecordAndEval().
 	 *
 	 * Atp_LogTestFile() is defined here in atpexmp.c (see above).
 	 */
+
 	if (!AutoTestMode)
 	  for (;;) {
 		 Slp_StdinHandler();
 		 Atp_LogTestFile(interp);
 #ifdef TCL_MEM_DEBUG
 		 if (quitFlag) {
-		   Tcl_Deletelnterp(interp);
+		   Tcl_DeleteInterp(interp);
 		   Tcl_DumpActiveMemory(dumpFile);
 		   system("reset");
 		   exit(0);
