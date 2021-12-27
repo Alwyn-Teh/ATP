@@ -34,7 +34,7 @@ libatp.a:	$(ATP_OBJS)
 
 atpexmp:	libatp.a atpexmp.o
 			$(RM) $@
-			$(CC) -o $@ -c $(CFLAGS) atpexmp.c $(LDFLAGS) -ltcl -lmalloc -lm -lslp -latp
+			$(CC) -v -o $@ $(CFLAGS) atpexmp.c $(LDFLAGS) -lslp -ltcl -latp -lm
 			chmod +x atpexmp
 
 clean:
