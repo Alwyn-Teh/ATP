@@ -213,6 +213,7 @@ Atp_MatchStrings(src, strTab)
 	Alwyn Teh	27 June 1993		Initial Creation
 	Alwyn Teh	25 January 1994		Redo while loop as for
 									loop to fix lint complaint
+	Alwyn Teh	26 December 2021	Make new string to avoid bus error
 
 *********************************************************************-*/
 #if defined(__STDC__) || defined(___cplusplus)
@@ -224,13 +225,15 @@ Atp_StrToLower(string)
 #endif
 {
 	register char *s;
+	char *newStr = NULL;
 
 	if (string == NULL)
 	  return NULL;
 
-	for (s = string; (*s != NULL); s++) {
+	newStr = Atp_Strdup(string);
+	for (s = newStr; (*s != NULL); s++) {
 	   *s = tolower(*s);
 	}
 
-	return string;
+	return newStr;
 }

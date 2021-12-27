@@ -53,6 +53,9 @@
 /* Definitions */
 #define PROMPT		"atpexmp> "
 #define NELEMS(a)	(sizeof (a) / sizeof (a[0]))
+#ifndef NULL
+#  define NULL (void *)0
+#endif
 
 /* Declarations */
 char	cmd_result[80];
@@ -1735,8 +1738,8 @@ Atp_Result RecurCmd(clientData, interp, argc, argv)
 
 	result = Tcl_Eval(interp, Atp_Str("command"));
 
-	if (interp->result != NULL) {
-	  (void) Atp_AdvPrintf("%s\n", interp->result);
+	if (Tcl_GetStringResult(interp) != NULL) {
+	  (void) Atp_AdvPrintf("%s\n", Tcl_GetStringResult(interp));
 
 	  Tcl_SetResult(interp, "", TCL_STATIC);
 	}
@@ -1807,7 +1810,7 @@ void OutputResult(interp, result)
 {
 	if (result == TCL_OK)
 	{
-	  if (*interp->result != 0)
+	  if (*Tcl_GetStringResult(interp) != 0)
 	  {
 		FILE *cmdout_fp = stdout;
 
@@ -1819,7 +1822,7 @@ void OutputResult(interp, result)
 					 cmdout_fp : stdout;
 #endif
 
-		(void) fprintf(cmdout_fp, "%s\n", interp->result);
+		(void) fprintf(cmdout_fp, "%s\n", Tcl_GetStringResult(interp));
 
 		(void) fflush(cmdout_fp); /* flush output */
 		(void) pclose(cmdout_fp); /* close pipe */
@@ -1832,8 +1835,8 @@ void OutputResult(interp, result)
 	  else
 		(void) fprintf(stderr, "Error %d", result);
 
-	  if (*interp->result != 0)
-		(void) fprintf(stderr, ": %s\n", interp->result);
+	  if (*Tcl_GetStringResult(interp) != 0)
+		(void) fprintf(stderr, ": %s\n", Tcl_GetStringResult(interp));
 	  else
 		(void) fprintf(stderr, "\n");
 
@@ -2120,7 +2123,7 @@ Atp_Result LLC_TEST_Cmd(clientData, interp, arge, argv)
 
 	result = Tcl_Eval(interp, llc_cmd);
 
-	Atp_AdvPrintf("%s\n", interp->result);
+	Atp_AdvPrintf("%s\n", Tcl_GetStringResult(interp));
 
 	Atp_AdvPrintf("\"llc\" command test OK.");
 
@@ -2918,13 +2921,13 @@ void Atp_LogTestFile(interp)
 		Atp_Logtest_CmdCalled = 0;
 	  else {
 		/* Save the last command's result. */
-		last_command_result = Atp_Strdup(interp->result);
+		last_command_result = Atp_Strdup(Tcl_GetStringResult(interp));
 		/*
 		 *	We have no direct access to the command buffer,
 		 *	so use "history" to get the last command entered.
 		 */
 		Tcl_Eval(interp, "history event [expr {[history nextid]-1}]");
-		last_command = interp->result;
+		last_command = Tcl_GetStringResult(interp);
 
 		Atp_LogTestScript(interp, last_command, last_command_result);
 
@@ -3478,7 +3481,7 @@ int main(argc, argv)
 	 *
 	 *	Atp2Tcl_GetPager returns a pointer to a function returning
 	 *	int. Here, it is assigned to Slp_Printf since SLP invokes
-	 *	Tcl_Eval and displays interp->result.
+	 *	Tcl_Eval and displays Tcl_GetStringResult(interp).
 	 */
 	Slp_Printf = Atp2Tcl_GetPager(interp);
 
@@ -3566,7 +3569,12 @@ int main(argc, argv)
 	Atp_AdvPrintf(":%s/man", strdup(getenv("HOME")));
 	Atp_AdvPrintf(":~/man");
 	Atp_AdvPrintf(":/users/guest/man");
-	Atp_AdvPrintf(":%s", strdup(getenv("MANPATH"))); /* do this last */
+
+	char *_manpath = NULL;
+	_manpath = getenv("MANPATH");
+	if (_manpath != NULL) {
+	  Atp_AdvPrintf(":%s", strdup(_manpath)); /* do this last */
+	}
 	putenv(manpath = Atp_AdvGets());
 
 	/* Defaults prompt to PROMPT. */
@@ -3960,8 +3968,8 @@ int AutoTest_Loop(interp)
 		result = Tcl_RecordAndEval(interp, cmd, 0);
 		Tcl_DStringFree(&buffer);
 		if (result == TCL_OK) {
-		  if (*interp->result != 0) {
-			printf ("%s\n" , interp->result);
+		  if (*Tcl_GetStringResult(interp) != 0) {
+			printf ("%s\n" , Tcl_GetStringResult(interp));
 		  }
 		} else {
 			if (result == TCL_ERROR) {
@@ -3969,8 +3977,8 @@ int AutoTest_Loop(interp)
 			} else {
 			  fprintf(stderr, "Error %d", result);
 			}
-			if (*interp->result != 0) {
-			  printf(": %s\n", interp->result);
+			if (*Tcl_GetStringResult(interp) != 0) {
+			  printf(": %s\n", Tcl_GetStringResult(interp));
 			} else {
 			  printf("\n");
 			}

@@ -179,15 +179,15 @@ void * (*Atp_GetExternalClientData)
 /* externs */
 
 /* "help -lang" parmdef description strings (atphelpc.c) */
-extern char Atp_HelpLangCaseDesc[80];
-extern char Atp_HelpLangOptStrDesc[80];
+EXTERN char Atp_HelpLangCaseDesc[120];
+EXTERN char Atp_HelpLangOptStrDesc[80];
 
 /* Pointer to "help" command parameter table. */
-extern Atp_ParmDefEntry *Atp_HelpCmdParmsPtr;
+EXTERN Atp_ParmDefEntry *Atp_HelpCmdParmsPtr;
 
 /* Pointer to command record for "help" command. */
-extern Atp_CmdRec *Atp_HelpCmdRecPtr;
-extern char	**Atp_HiddenCommands;
+EXTERN Atp_CmdRec *Atp_HelpCmdRecPtr;
+EXTERN char	**Atp_HiddenCommands;
 EXTERN char * Atp_VerifyCmdRecParmDef _PROTO_(( Atp_CmdRec *Atp_CmdRecPtr ));
 EXTERN Atp_Result (*Atp_GetFrontEndManpage) _PROTO_((void *, ...));
 EXTERN Atp_CmdRec * Atp_FindCommand _PROTO_(( void *ptr, int mode ));
@@ -551,6 +551,8 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 									using TCL_VERSION macro...etc.
 	Alwyn Teh	25 December 2021	Bring Atp2Tcl to be compatible
 									with Tcl 8.6.12
+	Alwyn Teh	27 December 2021	Use Tcl_GetStringResult(interp)
+									instead of interp->result
 
 *******************************************************************-*/
 #if defined(__STDC__) || defined(_cplusplus)
@@ -571,7 +573,7 @@ static void Do_Tcl_Version_Copyright_Stuff(interp)
 	{
 		result = Tcl_Eval(interp, "info tclversion");
 		if (result == TCL_OK) {
-		  strcpy (tclversion, interp->result);
+		  strcpy (tclversion, Tcl_GetStringResult(interp));
 		}
 		else {
 		  sprintf(tclversion, "%s", TCL_VERSION); /* should never happen */
@@ -959,7 +961,7 @@ int Atp2Tcl_UnknownCmd(clientData, interp, argc, argv)
 	Alwyn Teh	18 July	1994	Capitalize first letter
 								of command description
 	Alwyn Teh	27 July	1994	Rewrite description for
-								paging command (it doesn1t
+								paging command (it doesn't
 								toggle anything).
 
 ********************************************************************/
@@ -1746,6 +1748,8 @@ Atp2Tcl_AddHelpInfo(interp, text_type, HelpName, DescText)
 									when getting Tcl manpages;
 									due to operational problem
 									on SUN platform.
+	Alwyn Teh	27 December 2021	Use Tcl_GetStringResult(interp)
+									instead of interp->result
 
 *******************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
@@ -1827,7 +1831,7 @@ static Atp_Result Atp2Tcl_GetTclManpage(_clientData, va_alist)
 		 * See if command name is a Tcl proc, if so, make a manpage for it.
 		 */
 		if ((Tcl_VarEval(interp, "info procs ", name, NULL) == TCL_OK) &&
-				(strcmp(interp->result, name) == 0))
+				(strcmp(Tcl_GetStringResult(interp), name) == 0))
 		{
 			char *rs = NULL;
 
@@ -1841,7 +1845,7 @@ static Atp_Result Atp2Tcl_GetTclManpage(_clientData, va_alist)
 
 			Atp_DvsPrintf(&tmpcmd, synopsis_cmd, name, pid, pid);
 			Tcl_Eval(interp, tmpcmd);
-			Atp_AdvPrintf ("%s\n\n", interp->result);
+			Atp_AdvPrintf ("%s\n\n", Tcl_GetStringResult(interp));
 			FREE(tmpcmd);
 
 			ZeroTclTmpVars();
@@ -1851,7 +1855,7 @@ static Atp_Result Atp2Tcl_GetTclManpage(_clientData, va_alist)
 			Atp_DvsPrintf(&tmpcmd, defaults_cmd, name, name,
 						  pid, pid, pid, pid, pid);
 			Tcl_Eval(interp, tmpcmd);
-			Atp_AdvPrintf(" {%s}", interp->result);
+			Atp_AdvPrintf(" {%s}", Tcl_GetStringResult(interp));
 			Atp_AdvPrintf(" {\n");
 			FREE(tmpcmd);
 
@@ -1859,7 +1863,7 @@ static Atp_Result Atp2Tcl_GetTclManpage(_clientData, va_alist)
 			ZeroTclTmpVars ();
 
 			Tcl_VarEval (interp, "info body ", name, NULL);
-			Atp_AdvPrintf("%s", interp->result);
+			Atp_AdvPrintf("%s", Tcl_GetStringResult(interp));
 
 			Atp_AdvPrintf("\n}");
 
@@ -1909,7 +1913,7 @@ static int isBuiltInTclCmd(cmdname)
 		result = Tcl_Eval(interp, "info commands");
 
 		if (result == TCL_OK)
-		  TclBuiltInCmdList = Atp_Tokeniser(interp->result, &count);
+		  TclBuiltInCmdList = Atp_Tokeniser(Tcl_GetStringResult(interp), &count);
 
 		Tcl_DeleteInterp(interp);
 
