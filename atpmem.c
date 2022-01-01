@@ -39,10 +39,10 @@ static char *__Atp_Local_FileName__ = __FILE__;
 #define SPAREROOM				1
 
 /*
-	Local variables
+	Static variables
  */
 static ParmStoreMemMgtNode		*ParmStoreBuilder;
-static ParmStoreMemMgtNode *	ParmStoreStack[ATP_MAX_NESTCMD_DEPTH+1];
+static ParmStoreMemMgtNode		**ParmStoreStack = NULL;
 static int						CurrParmStoreStackIndex	= -1;
 static	ParmStoreInfo			ZeroedParmRec = { 0 };
 static int						LargestDataStoreltem = sizeof (Atp_ChoiceDescriptor);
@@ -1285,9 +1285,11 @@ ReleaseStore(CtrlStore, DataStore)
 						stack just to support nested commands!
 
 	Modifications:
-		Who			When				Description
-	----------	--------------	------------------------------
-	Alwyn Teh	13 July 1992	Initial Creation
+		Who			When					Description
+	----------	----------------	------------------------------
+	Alwyn Teh	13 July 1992		Initial Creation
+	Alwyn Teh	31 December 2021	Make ParmStoreStack dynamic
+									to avoid runtime error
 
 ********************************************************************-*/
 #if defined (__STDC__) || defined (__cplusplus)
@@ -1300,7 +1302,10 @@ Atp_PushParmStorePtrOnStack (_parmStore)
 {
 	ParmStoreMemMgtNode *parmStore = (ParmStoreMemMgtNode *)_parmStore;
 
-	ParmStoreStack[++CurrParmStoreStackIndex] = parmStore;
+	if (ParmStoreStack == NULL)
+	  ParmStoreStack = calloc(ATP_MAX_NESTCMD_DEPTH+1, sizeof(ParmStoreMemMgtNode *));
+
+	ParmStoreStack[++CurrParmStoreStackIndex] = (ParmStoreMemMgtNode *) parmStore;
 }
 
 /*+*******************************************************************

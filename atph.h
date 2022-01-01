@@ -383,9 +383,9 @@ typedef struct Atp_ParmDefEntry
 	 Atp_CmdRec, puts them in a dynamic structure and returns its
 	 address.
 
-	 Atp_NoOfPDentries{) returns the number of entries in the ATP
+	 Atp_NoOfPDentries() returns the number of entries in the ATP
 	 command's Parameter Definition table (ParmDef). It attempts to
-	 evaluate this first by using sizeofO at compile time. This works
+	 evaluate this first by using sizeof() at compile time. This works
 	 only if the name of the parmdef is supplied; otherwise, zero is
 	 evaluated in which case Atp_EvalNoOfParmDefEntries() will attempt
 	 to count the number of entries.
@@ -466,8 +466,7 @@ EXTERN Atp_Result	Atp_DeleteCmdGrp _PROTO_((void *id));
 
 EXTERN void Atp_HelpCmdDeleteProc();
 
-#define Atp_NoOfPDentries(pd) \
-			Atp_EvalNoOfParmDefEntries (pd, (sizeof(pd)/sizeof(Atp_ParmDefEntry)))
+#define Atp_NoOfPDentries(pd)	Atp_EvalNoOfParmDefEntries(pd, sizeof(pd))
 
 /*
 -----------------------------------------------------------------
@@ -926,7 +925,7 @@ EXTERN Atp_Result Atp_ParseRptBlkMarker _PROTO_((char *src,
 EXTERN Atp_Result Atp_ProcessChoiceConstruct _PROTO_((Atp_ParserStateRec *));
 EXTERN Atp_Result Atp_ProcessCaseConstruct _PROTO_((Atp_ParserStateRec *));
 
-EXTERN Atp_Result Atp_ProcessNumParm _PROTO_( (Atp_ParserStateRec *));
+EXTERN Atp_Result Atp_ProcessNumParm _PROTO_((Atp_ParserStateRec *));
 EXTERN Atp_Result Atp_ProcessUnsNumParm _PROTO_((Atp_ParserStateRec *));
 EXTERN Atp_Result Atp_ParseNum _PROTO_((char *input_src,
 										Atp_ParmCode parmcode,
@@ -1111,7 +1110,7 @@ EXTERN void		Atp_Initialise _PROTO_((void));
 
 EXTERN int		Atp_EvalNoOfParmDefEntries
 						_PROTO_((Atp_ParmDefEntry *ParmDefPtr,
-								 int NoOfPDentries));
+								 int sizeOfParmdef));
 
 EXTERN int		Atp_VerifyParmDef _PROTO_((Atp_ParmDefEntry *parmdef,
 										   int entries));

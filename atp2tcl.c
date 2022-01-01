@@ -324,17 +324,28 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 		if (name == NULL || *name == '\0')
 		  return ATP_ERROR;
 
+		printf("Atp2Tcl_InternalCreateCommand - 1\n");
+
+		printf("Atp2Tcl_InternalCreateCommand: calling Atp_AssembleCmdRecord(name = %s) with sizeof_parmdef = %d\n", name, sizeof_parmdef);
 		CmdRecPtr = Atp_AssembleCmdRecord(name, desc,
 										  (Atp_CmdCallBackType)callback,
 										  parmdef, sizeof_parmdef,
 										  (void *)clientdata);
 
+		printf("Atp2Tcl_InternalCreateCommand - 2\n");
+
 		if (return_cmd_rec != NULL)
 		  *return_cmd_rec = NULL; /* initial cmd rec return value */
 
+		printf("Atp2Tcl_InternalCreateCommand - 3\n");
+
 		Atp_RegisterCommand((void *)interp, CmdRecPtr);
 
+		printf("Atp2Tcl_InternalCreateCommand - 4\n");
+
 		result_string = Atp_VerifyCmdRecParmDef(CmdRecPtr);
+
+		printf("Atp2Tcl_InternalCreateCommand - 5\n");
 
 		if (result_string == NULL) {
 			/*
@@ -342,48 +353,67 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 			 *	with a help area. We can still go ahead and create
 			 *	command.
 			 */
+			printf("Atp2Tcl_InternalCreateCommand - 5.1\n");
 			if (help_id != 0)
 			{
+				printf("Atp2Tcl_InternalCreateCommand - 5.1.1\n");
 				if (Atp_AddCmdToHelpArea(help_id, CmdRecPtr) == 0) {
+					printf("Atp2Tcl_InternalCreateCommand - 5.1.2\n");
 				  (void) fprintf(stderr, SysErrPrefix);
 				  if (filename != NULL) {
+					printf("Atp2Tcl_InternalCreateCommand - 5.1.3\n");
 					(void) fprintf(stderr, Atp2Tcl_CreateCommand_errmsg[0],
 								   filename, linenumber);
 					(void) fprintf(stderr, LeftAlignSpace);
 				  }
+				  printf("Atp2Tcl_InternalCreateCommand - 5.1.4\n");
 				  (void) fprintf(stderr, Atp2Tcl_CreateCommand_errmsg[1],
 								 CmdRecPtr->cmdName, help_id);
+				  printf("Atp2Tcl_InternalCreateCommand - 5.1.5\n");
 				  (void) fflush(stderr);
 
+				  printf("Atp2Tcl_InternalCreateCommand - 5.1.6\n");
 				  return ATP_ERROR;
 				}
 			}
 
+			printf("Atp2Tcl_InternalCreateCommand - 5.2\n");
 			Tcl_CreateCommand(interp, name, Atp2Tcl_Adaptor,
 							  (ClientData)CmdRecPtr, deleteproc);
 
-			if (return_cmd_rec != NULL)
+			printf("Atp2Tcl_InternalCreateCommand - 5.3\n");
+			if (return_cmd_rec != NULL) {
+			  printf("Atp2Tcl_InternalCreateCommand - 5.3.1\n");
 			  *return_cmd_rec = CmdRecPtr;
+			}
 
+			printf("Atp2Tcl_InternalCreateCommand - 5.4\n");
 			return ATP_OK;
 		}
 		else {
+			printf("Atp2Tcl_InternalCreateCommand - 5.5\n");
 			(void) fprintf(stderr, SysErrPrefix);
 			if (filename != NULL) {
+			  printf("Atp2Tcl_InternalCreateCommand - 5.5.1\n");
 			  (void) fprintf(stderr, Atp2Tcl_CreateCommand_errmsg[0],
 					  	  	 filename, linenumber);
 			  (void) fprintf (stderr, LeftAlignSpace);
+			  printf("Atp2Tcl_InternalCreateCommand - 5.5.2\n");
 			}
+			printf("Atp2Tcl_InternalCreateCommand - 5.5.3\n");
 			(void) fprintf(stderr, "%s\n", result_string);
 			(void) fprintf(stderr, LeftAlignSpace);
 			(void) fprintf(stderr, Atp2Tcl_CreateCommand_errmsg[2],
 								   CmdRecPtr->cmdName);
 			(void) fflush(stderr);
 
+			printf("Atp2Tcl_InternalCreateCommand - 5.5.4\n");
 			FREE(result_string);
 
+			printf("Atp2Tcl_InternalCreateCommand - 5.5.5\n");
 			return ATP_ERROR;
 		}
+		printf("Atp2Tcl_InternalCreateCommand - 6\n");
 }
 
 /*+*******************************************************************
@@ -460,12 +490,17 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 		Atp_CmdRec	*CmdRecPtr;
 		void		*parmstore = NULL;
 		char		*return_string = NULL;
-		int	result = ATP_OK;
+		int			result = ATP_OK;
+
+		printf("Atp2Tcl_Adaptor called...\n");
 
 		/* "Extract" embedded information from the client data field. */
 		CmdRecPtr = (Atp_CmdRec *)clientData;
 
+		printf("Atp2Tcl_Adaptor got Atp_CmdRec (name = %s) from clientData (%d)\n", CmdRecPtr->cmdName, clientData);
+
 		/* Process parameter tokens */
+		printf("Atp2Tcl_Adaptor calling Atp_ProcessParameters()...\n");
 		result = Atp_ProcessParameters(CmdRecPtr, argc, argv,
 									   &return_string, &parmstore);
 
@@ -477,6 +512,7 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 			 *	Pass the original client data as part of the Tcl
 			 *	callback interface.
 			 */
+			printf("Atp2Tcl_Adaptor calling Atp_ExecuteCallback()...\n");
 			result = Atp_ExecuteCallback(CmdRecPtr->callBack, parmstore,
 										 (ClientData)CmdRecPtr->clientData,
 										 interp, argc, argv);
@@ -494,6 +530,7 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 		/* Convert ATP's result code to TCL's result code. */
 		result = (result == ATP_ERROR) ? TCL_ERROR : TCL_OK;
 
+		printf("Atp2Tcl_Adaptor returning %d\n", result);
 		return result;
 	}
 
@@ -676,6 +713,7 @@ Atp_Result Atp2Tcl_Init(interp)
 	}
 
 	/* Declare the name and version of the front-end tokeniser used. */
+	printf("Atp2Tcl_Init - 1\n");
 	Do_Tcl_Version_Copyright_Stuff(interp);
 
 	/*
@@ -693,6 +731,8 @@ Atp_Result Atp2Tcl_Init(interp)
 
 	/* Extract pointer to command table from the interpreter. */
 	tablePtr = Atp2Tcl_GetTclCommandTable(interp);
+
+	printf("Atp2Tcl_Init - 2\n");
 
 	/*
 	 *	Register command table pointer with the command table access
@@ -729,6 +769,8 @@ Atp_Result Atp2Tcl_Init(interp)
 	Atp2Tcl_CmdTableAccessDesc->CmdDesc	= Atp2Tcl_GetCmdDesc;
 	Atp2Tcl_CmdTableAccessDesc->CmdRec	= Atp2Tcl_GetCmdRecord;
 
+	printf("Atp2Tcl_Init - 3\n");
+
 	/* Initialise ATP Adaptor indicator function. */
 	Atp_AdaptorUsed = Atp2Tcl_AtpAdaptorUsed;
 
@@ -753,30 +795,44 @@ Atp_Result Atp2Tcl_Init(interp)
 	Atp_Adaptor_FrontEnd_ReturnCode_OK		= TCL_OK;
 	Atp_Adaptor_FrontEnd_ReturnCode_ERROR	= TCL_ERROR;
 
+	printf("Atp2Tcl_Init - 4\n");
+
 	/* Initialise any other ATP internal things. */
 	Atp_Initialise();
+
+	printf("Atp2Tcl_Init - 5\n");
 
 	/* Arrange for Tcl to cleanup ATP if/when the Tcl interp is deleted. */
 	Tcl_CallWhenDeleted(interp, Atp2Tcl_InterpDeleteProc,
 						(ClientData)Atp2Tcl_CmdTableAccessDesc);
 
+	printf("Atp2Tcl_Init - 5.1\n");
+
 	/* Get Help Area ID for built-in commands. */
 	misc_helpid = Atp_CreateHelpArea(ATP_HELPCMD_OPTION_MISC, NULL);
+
+	printf("Atp2Tcl_Init - 5.2\n");
 
 	/* Print "Tcl" in "help -lang" parmdef description strings. */
 	{
 		char *fmtstr = strdup(Atp_HelpLangCaseDesc);
+		printf("Atp2Tcl_Init - 5.2.1\n");
 		sprintf(Atp_HelpLangCaseDesc, fmtstr, NameOfFrontEndToAtpAdaptor);
+		printf("Atp2Tcl_Init - 5.2.2\n");
 		free(fmtstr);
+
+		printf("Atp2Tcl_Init - 5.3\n");
 
 		fmtstr = strdup(Atp_HelpLangOptStrDesc);
 		sprintf(Atp_HelpLangOptStrDesc, fmtstr, NameOfFrontEndToAtpAdaptor);
 		free(fmtstr);
 	}
 
+	printf("Atp2Tcl_Init - 6\n");
+
 	/* Create help command first. */
 	(void)
-	Atp2Tcl_InternalCreateCommand (interp, ATP_HELP_CMDNAME,
+	Atp2Tcl_InternalCreateCommand(interp, ATP_HELP_CMDNAME,
 								  "HELP Information",
 								  misc_helpid,
 								  Atp_HelpCmdGlueProc,
@@ -791,6 +847,8 @@ Atp_Result Atp2Tcl_Init(interp)
 #endif
 								  &Atp_HelpCmdRecPtr) ;
 
+	printf("Atp2Tcl_Init - 6.1\n");
+
 	/*
 	 *	Arrange for Tcl to cleanup "help" command contents
 	 *	(e.g. help areas) if/when the Tcl interp is deleted.
@@ -798,6 +856,8 @@ Atp_Result Atp2Tcl_Init(interp)
 	 *	So, multiple Tcl interpreters NOT supported yet!
 	 */
 	Tcl_CallWhenDeleted(interp, Atp2Tcl_HelpCmdDeleteProc, (ClientData)0);
+
+	printf("Atp2Tcl_Init - 6.2\n");
 
 	/*
 	 *	Create On-line Man Page generating command for command
@@ -810,8 +870,10 @@ Atp_Result Atp2Tcl_Init(interp)
 						Atp_ManPage_PD_ptr,
 						(ClientData) Atp2Tcl_CmdTableAccessDesc,
 						(Tcl_CmdDeleteProc *) NULL);
+	printf("Atp2Tcl_Init - 6.3\n");
 	(void) Atp_AddHelpInfo(ATP_MANPAGE_HEADER, ATP_MANPAGE_CMDNAME,
 						   Atp_ManPageHeader);
+	printf("Atp2Tcl_Init - 6.4\n");
 
 #ifdef DEBUG
 	{
@@ -837,7 +899,11 @@ Atp_Result Atp2Tcl_Init(interp)
 					  (Atp2Tcl_CallbackType)Atp2Tcl_UnknownCmd,
 					  (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
+	printf("Atp2Tcl_Init - 6.5\n");
+
 	Atp_HiddenCommands = Atp2Tcl_HiddenCommands; /* hide unknown command */
+
+	printf("Atp2Tcl_Init - 7\n");
 
 	/*
 	 *	Register function with ATP which obtains the manpage, if any, of
@@ -846,6 +912,8 @@ Atp_Result Atp2Tcl_Init(interp)
 	Atp_GetFrontEndManpage = Atp2Tcl_GetTclManpage;
 	(void) Atp_AddHelpInfo(ATP_MANPAGE_HEADER, ATP_MANPAGE_CMDNAME,
 						   ManCmd_TclManPageHeader);
+
+	printf("Atp2Tcl_Init - 8\n");
 
 	return ATP_OK;
 }
@@ -977,11 +1045,15 @@ Atp2Tcl_GetPager(interp)
 
 	Atp_Result rc;
 
+	printf("Atp2Tcl_GetPager - 1\n");
+
 	if (interp == NULL) {
+	  printf("Atp2Tcl_GetPager - 2\n");
 	  return NULL;
 	}
 	else
 	{
+		printf("Atp2Tcl_GetPager - 3\n");
 		rc = Atp2Tcl_CreateCommand(interp, "paging",
 								   "Set/query paging mode (ON, OFF or AUTO)",
 								   misc_helpid,
@@ -989,7 +1061,8 @@ Atp2Tcl_GetPager(interp)
 								   Atp_PagingParmsPtr,
 								   (ClientData) 0,
 								   (Tcl_CmdDeleteProc *) 0);
-		if (rc == ATP_OK)
+		if (rc == ATP_OK) {
+		  printf("Atp2Tcl_GetPager - 4\n");
 		  rc = Atp2Tcl_CreateCommand( interp, "pager",
 									  "Set output pager to use",
 									  misc_helpid,
@@ -997,11 +1070,16 @@ Atp2Tcl_GetPager(interp)
 									  Atp_PagerParmsPtr,
 									  (ClientData) 0,
 									  (Tcl_CmdDeleteProc *) 0);
+		  printf("Atp2Tcl_GetPager - 5\n");
+		}
 
-		if (rc == ATP_OK)
+		if (rc == ATP_OK) {
+		  printf("Atp2Tcl_GetPager - 6\n");
 		  return pager_ptr;
+		}
 	}
 
+	printf("Atp2Tcl_GetPager - 7\n");
 	return NULL;
 }
 
@@ -1145,7 +1223,7 @@ Atp2Tcl_ExtractClientData(c1ientData)
 	Alwyn Teh	15 September 1992	Initial	Creation
 
 ********★***********************************************************-*/
-#if defined (__STDC_) || defined (__cplusplus)
+#if defined (__STDC__) || defined (__cplusplus)
 static void *
 Atp2Tcl_GetCmdTabAccessRecord( void * clientData )
 #else
@@ -1593,6 +1671,8 @@ Atp2Tcl_SetResultString (return_string, va_alist)
 	interp = va_arg(ap, Tcl_Interp *);
 
 	Tcl_SetResult(interp, return_string, TCL_DYNAMIC);
+
+	va_end(ap);
 }
 
 /*+****************+**************************************************
@@ -1879,6 +1959,9 @@ static Atp_Result Atp2Tcl_GetTclManpage(_clientData, va_alist)
 			Tcl_SetResult(interp, tmpcmd, TCL_DYNAMIC); /* tmpcmd freed by Tcl */
 			result = ATP_ERROR;
 		}
+
+		va_end(ap);
+
 		return result;
 }
 
@@ -1919,11 +2002,11 @@ static int isBuiltInTclCmd(cmdname)
 
 		if (TclBuiltInCmdList != NULL)
 		{
-#if __STDC___ || hpux
-			atexit(FreeBuiltlnTclCmdList);
+#if __STDC__ || hpux
+			atexit(FreeBuiltInTclCmdList);
 #else
 #	if sun || sun2 || sun3 || sun4
-			on_exit (FreeBuiltlnTclCmdList)
+			on_exit(FreeBuiltInTclCmdList)
 #	endif
 #endif
 			first_time = 0;
@@ -1951,7 +2034,7 @@ static Tcl_Interp		*_Atp2Tcl_GlueInterp_		=	NULL;
 static int				_Atp2Tcl_GlueArgc_			=	0;
 static char *			*_Atp2Tcl_GlueArgv_			=	NULL;
 
-#if defined(__STDC__) || defined(___cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 static Atp_Result Atp2Tcl_HelpCmdGlueCallback (char *HelpOption)
 #else
 static Atp_Result Atp2Tcl_HelpCmdGlueCallback (HelpOption)

@@ -374,7 +374,7 @@ Category 3 (11), COMPLEX PARM CLASS:
 #define even(n)		(((n) %	2)	==	0)
 #else
 #define odd(n)		((n) & 1)
-#define even(n)		(odd(n)	--	0)
+#define even(n)		(odd(n)	==	0)
 #endif
 
 #define isodigit(d)	(((d) >= 'O') && ((d) <= '7'))
@@ -765,7 +765,7 @@ EXTERN char ** Atp_GetUserDefinedProcNames _PROTO_((void *clientData,
 #define Atp_ParseRecCurrPDidx(prec)	(prec->CurrPDidx)
 
 #define Atp_ParseRecDefaultParmValue(prec) \
-			((prec->ParmDefPtr) [prec->CurrPDidx].Default)
+			((prec->ParmDefPtr)[prec->CurrPDidx].Default)
 
 #define Atp_ParseRecDefaultParmPointer(prec) \
 			((prec->ParmDefPtr)[prec->CurrPDidx].DataPointer)

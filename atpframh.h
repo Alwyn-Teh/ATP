@@ -68,7 +68,7 @@
 
 /*
 	NOTE: If the maximum number of arguments being passed is increased
-		  beyond the limit ATP_DEFAOLT_MAX_ARGS, just simply change
+		  beyond the limit ATP_DEFAULT_MAX_ARGS, just simply change
 		  its value to suit the requirements and then alter
 		  ATP_FRAME_RELAY() appropriately.
 */

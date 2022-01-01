@@ -169,10 +169,9 @@ Atp_ParseStr(src, strPtr, strLenPtr, strType, ErrorMsgPtr)
 	{
 	  if (ErrorMsgPtr != NULL)
 	  {
-		*ErrorMsgPtr = Atp_MakeErrorMsg(
-		ERRLOC,
-		ATP_ERRCODE_EXPECTED_PARM_NOT_FOUND,
-		strType, Atp_CurrParmName);
+		*ErrorMsgPtr = Atp_MakeErrorMsg(ERRLOC,
+										ATP_ERRCODE_EXPECTED_PARM_NOT_FOUND,
+										strType, Atp_CurrParmName);
 	  }
 	  return ATP_ERROR;
 	}

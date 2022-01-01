@@ -183,7 +183,8 @@ Atp_ParseDataBytes(hex_src, dataBytes, ErrorMsgPtr)
 	char				**ErrorMsgPtr;
 #endif
 {
-	register Atp_ByteType	hex_byte[3], *byte_string;
+	Atp_ByteType			hex_byte[3];
+	register Atp_ByteType	*byte_string;
 	register int			hex_str_index, byte_index, hex_digits_count;
 	register char			*scanPtr;
 

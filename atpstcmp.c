@@ -232,6 +232,7 @@ Atp_StrToLower(string)
 
 	newStr = Atp_Strdup(string);
 	for (s = newStr; (*s != NULL); s++) {
+	   printf("Atp_StrToLower - %c\n", *s);
 	   *s = tolower(*s);
 	}
 

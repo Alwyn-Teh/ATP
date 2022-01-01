@@ -420,7 +420,7 @@ Atp_Result SumCmd(clientData, interp, argc, argv)
 	Numbers = (Atp_NumType *) Atp_RptBlockPtr("Numbers", &NumberCount);
 
 	/* Add the numbers, output the result, and return. */
-	for (Sum =0, I = 0; I < NumberCount; I++)
+	for (Sum = 0, I = 0; I < NumberCount; I++)
 	   Sum += Numbers[I];
 
 	(void) sprintf(cmd_result, "%d", Sum);
@@ -505,9 +505,9 @@ static char *substr_manpg_footer[] = {
 
 /* Vproc */
 #if defined(__STDC__) || defined(__cplusplus)
-char* VerifyStartValue ( void * ValuePtr, Atp_BoolType ValuePresent )
+char* VerifyStartValue( void * ValuePtr, Atp_BoolType ValuePresent )
 #else
-char* VerifyStartValue (ValuePtr, ValuePresent)
+char* VerifyStartValue(ValuePtr, ValuePresent)
 	void *	ValuePtr;
 	Atp_BoolType ValuePresent;
 #endif
@@ -523,7 +523,7 @@ char* VerifyStartValue (ValuePtr, ValuePresent)
 #if defined(__STDC__) || defined(__cplusplus)
 char* VerifyEndValue ( void * ValuePtr, Atp_BoolType ValuePresent )
 #else
-char* VerifyEndValue (ValuePtr, ValuePresent)
+char* VerifyEndValue(ValuePtr, ValuePresent)
 	void *	ValuePtr;
 	Atp_BoolType ValuePresent;
 #endif
@@ -572,10 +572,14 @@ Atp_Result SubstrCmd(clientData, interp, argc, argv)
 	char *argv[];
 #endif
 {
+	printf("Entering callBack SubstrCmd()...\n");
+
 	char *		Str		= Atp_Str("Str");
 	Atp_NumType	Start	= Atp_Num("Start");
 	Atp_NumType	End		= Atp_Num ("End");
 	char *		substr	= NULL;
+
+	printf("SubstrCmd: Str = %s, Start = %d, End = %d\n", Str, Start, End);
 
 	/*
 		Parameters are all verified, including verification functions
@@ -589,9 +593,13 @@ Atp_Result SubstrCmd(clientData, interp, argc, argv)
 	Str[End+1] = '\0';	/* end marker for character strings */
 
 	/* Use dynamic buffer because maximum length is INT_MAX. */
+	printf("SubstrCmd: Calling Atp_DvsPrintf() to make substr...\n");
 	(void) Atp_DvsPrintf(&substr, "%s", Str+Start);
+	printf("SubstrCmd: Atp_DvsPrintf returned OK\n");
 
+	printf("SubstrCmd: calling Tcl_SetResult()...\n");
 	Tcl_SetResult(interp, substr, TCL_DYNAMIC);
+	printf("OK\n");
 
 	return ATP_OK;
 }
@@ -711,7 +719,7 @@ MatchpaintVolumeOvly DefaultVolume = {5, L};
  *	The CHOICE value is represented by the structure Atp_ChoiceDescriptor.
  *	(see atph.h for its field definitions)
  */
-#if defined (__STDC__) || defined (__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 char * CheckAttributesVproc( void *valPtr, Atp_BoolType isUserValue )
 #else
 char * CheckAttributesVproc(valPtr, isUserValue)
@@ -777,7 +785,7 @@ ATP_DCL_PARMDEF(MatchPaintParms)
 ATP_END_DCL_PARMDEF
 
 /* Command callback function */
-#if defined (__STDC__) || defined (__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 Atp_Result MatchPaintCmd(ClientData clientData, Tcl_Interp *interp,
 						 int argc, char *argv[] )
 #else
@@ -2394,7 +2402,7 @@ ATP_END_DCL_PARMDEF
 Atp_Result QueryCmd(ClientData clientData, Tcl_Interp *interp,
 		int argc, char *argv[])
 #else
-Atp_Result QueryCmd{clientData, interp, argc, argv)
+Atp_Result QueryCmd(clientData, interp, argc, argv)
 	ClientData	clientData;
 	Tcl_Interp	*interp;
 	int			argc;
@@ -2525,9 +2533,9 @@ Atp_Result SendCmd(clientData, interp, argc, argv)
 
 *******************************************************************-*/
 ATP_DCL_PARMDEF(NullParms)
-BEGIN_PARMS
-null_def("null", "NULL parameter")
-END_PARMS
+	BEGIN_PARMS
+		null_def("null", "NULL parameter")
+	END_PARMS
 ATP_END_DCL_PARMDEF
 
 #if defined(__STDC__) || defined(__cplusplus)
@@ -3274,11 +3282,46 @@ char * NoteOnHistoryMechanism [] = {
 	NULL
 };
 
+// --------------------------- Debug ATP/Tcl ---------------------------
+
+// Tcl_CreateCommand(interp, cmdName, proc, clientData, deleteProc);
+
+int debugCmd(ClientData clientData, Tcl_Interp *interp, int argc, const char *argv[])
+{
+	printf("debug command called - %s\n", (char *)clientData);
+	return TCL_OK;
+}
+
+char *debug_clientData = "debug: Testing testing 123";
+
+void debug_deleteProc(ClientData clientData)
+{
+	printf("debug: deleteProc called %s\n", (char *)clientData);
+}
+
+ATP_DCL_PARMDEF(testingParms)
+	BEGIN_PARMS
+		num_def("x", "number", INT_MIN, INT_MAX, NULL)
+	END_PARMS
+ATP_END_DCL_PARMDEF
+
+Atp_Result testingCmd(ClientData clientData, Tcl_Interp *interp, int argc, const char *argv[])
+{
+	int x = Atp_Num("x");
+	printf("testing command called - clientData %s, x = %d\n", (char *)clientData, x);
+	printf("argc = %d, ...\n", argc);
+	for (int i = 0; i < argc; i++)
+		printf("argv[%d] = %s\n", i, argv[i]);
+	return ATP_OK;
+}
+
+// ---------------------------------------------------------------------
+
 /*+**************************************************************************
 
 	Function:		main()
 
-	Copyright:		BNR Europe Limited, 1993,	1994
+	Copyright:		BNR Europe Limited, 1993, 1994
 					Bell-Northern Research
 					Northern Telecom / Nortel
 
@@ -3347,11 +3390,13 @@ int main(argc, argv)
 	 *	Other duties include the creation of ATP built-in commands
 	 *	such as "help" and "man".
 	 */
+	printf("Initialising ATP2TCL Adaptor\n");
 	init_result = Atp2Tcl_Init(interp);
 	if (init_result != ATP_OK) {
 	  (void) fprintf(stderr, "ATP initialisation error.\n");
 	  exit(1);
 	}
+	printf("Done");
 
 	/*
 	 *	Initialize frontend editor SLP (pronounced "slap").
@@ -3471,6 +3516,23 @@ int main(argc, argv)
 
 	CreateMiscCmds(interp);
 
+	printf("atpexmp commands created\n");
+
+	// --------------------------- Debug ATP/Tcl ---------------------------
+
+	Tcl_CreateCommand(interp, "debug", debugCmd, (void *)debug_clientData, debug_deleteProc);
+
+	int t_id = Atp_CreateHelpArea("testing", "debug testing command");
+
+	Atp2Tcl_CreateCommand(interp, "testing", "debug testing command",
+							  t_id, testingCmd, testingParms,
+							  (ClientData) debug_clientData, (Tcl_CmdDeleteProc *) debug_deleteProc);
+	printf("sizeof(testingParms) = %lu\n", sizeof(testingParms));
+	printf("sizeof(Atp_ParmDefEntry) = %lu\n", sizeof(Atp_ParmDefEntry));
+	printf("Atp_NoOfPDentries(testingParms) = %d\n", Atp_NoOfPDentries(testingParms));
+
+	// ---------------------------------------------------------------------
+
 	/*
 	 *	Enable output paging feature by calling Atp2Tcl_GetPager.
 	 *
@@ -3484,6 +3546,7 @@ int main(argc, argv)
 	 *	Tcl_Eval and displays Tcl_GetStringResult(interp).
 	 */
 	Slp_Printf = Atp2Tcl_GetPager(interp);
+	printf("atpexmp.c - Atp2Tcl_GetPager(interp) assigned to Slp_Printf %d\n", Slp_Printf);
 
 	/*
 	 *	Above, we created some help areas using Atp_CreateHelpArea.
@@ -3522,19 +3585,23 @@ int main(argc, argv)
 	 *	time (or when someone is in a hurry).
 	 */
 	/* Add help information (manpage headers and footers) to commands. */
+	printf("atpexmp: Atp_AddHelpInfo - 1\n");
 	Atp_AddHelpInfo(ATP_MANPAGE_HEADER, "substr", substr_manpg_header);
 	Atp_AddHelpInfo(ATP_MANPAGE_FOOTER, "substr", substr_manpg_footer);
 
 	/* Add help information summary to help area. */
+	printf("atpexmp: Atp_AddHelpInfo - 2\n");
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "number",
 					number_help_area_summary);
 
 	/* Add manpage header and footer to estimate command. */
+	printf("atpexmp: Atp_AddHelpInfo - 3\n");
 	Atp2Tcl_AddHelpInfo(interp, ATP_MANPAGE_HEADER,
 						"estimate", estimate_desc_header);
 	Atp_AddHelpInfo(ATP_MANPAGE_FOOTER, "estimate", estimate_desc_footer);
 
 	/* Add version information to help system. */
+	printf("atpexmp: Atp_AddHelpInfo - 4\n");
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY,
 					ATP_HELPCMD_OPTION_VERSION,
 					atpexmp_versionInfo);
@@ -3543,21 +3610,25 @@ int main(argc, argv)
 					Slp_VersionInfo);
 
 	/* Add copyright information to help system (this is up to you). */
+	printf("atpexmp: Atp_AddHelpInfo - 5\n");
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "copyright", Atp_Copyright);
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "copyright", Tcl_Copyright);
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY, "copyright", Slp_Copyright);
 
 	/* Add help information to logtest manpage. */
+	printf("atpexmp: Atp_AddHelpInfo - 6\n");
 	Atp_AddHelpInfo(ATP_MANPAGE_HEADER, "logtest",
 					Atp_Logtest_Manpage_Header);
 
 	/* Add help information on SLP command line editing keystrokes. */
+	printf("atpexmp: Atp_AddHelpInfo - 7\n");
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY,
 					ATP_HELPCMD_OPTION_MISC,
 					Slp_KeystrokesHelpText);
 	Atp_AddHelpInfo(ATP_HELP_AREA_SUMMARY,
 					ATP_HELPCMD_OPTION_MISC,
 					NoteOnHistoryMechanism);
+	printf("atpexmp: Atp_AddHelpInfo - 8\n");
 
 	/*
 	 *	Force search path $MANPATH to include directories used by
@@ -3565,17 +3636,26 @@ int main(argc, argv)
 	 *	some Tcl commands have the same name as system commands (e.g.
 	 *	cd).
 	 */
+	printf("atpexmp: Atp_AdvPrintf - 1\n");
 	Atp_AdvPrintf("MANPATH=/Users/alwynteh/dev/Tcl-Tk/tcl8.6.12/doc");
+	printf("atpexmp: Atp_AdvPrintf - 2\n");
 	Atp_AdvPrintf(":%s/man", strdup(getenv("HOME")));
+	printf("atpexmp: Atp_AdvPrintf - 3\n");
 	Atp_AdvPrintf(":~/man");
+	printf("atpexmp: Atp_AdvPrintf - 4\n");
 	Atp_AdvPrintf(":/users/guest/man");
-
+	printf("atpexmp: Atp_AdvPrintf - 5\n");
 	char *_manpath = NULL;
 	_manpath = getenv("MANPATH");
 	if (_manpath != NULL) {
+	  printf("Trying to append existing MANPATH %s\n", _manpath);
 	  Atp_AdvPrintf(":%s", strdup(_manpath)); /* do this last */
 	}
+	printf("atpexmp: Atp_AdvGets - 1\n");
 	putenv(manpath = Atp_AdvGets());
+	printf("manpath = %s\n", manpath);
+
+	printf("Calling Slp_SetPrompt(%s)\n", PROMPT);
 
 	/* Defaults prompt to PROMPT. */
 	Slp_SetPrompt(PROMPT);
@@ -3585,15 +3665,19 @@ int main(argc, argv)
 	 *	initialized to 80 columns. If the prompt has not yet been
 	 *	defined, it is set to "Tcl-> ".
 	 */
-	if (!AutoTestMode)
+	if (!AutoTestMode) {
+	  printf("atpexmp: Calling Slp_InitStdio()\n");
 	  Slp_InitStdio();
+	}
 
 	/*
 	 *	Display currently active prompt on screen (i.e. to stdout).
 	 *	Slp_OutputPrompt() calls Slp_GetPrompt() to obtain the prompt.
 	 */
-	if (!AutoTestMode)
+	if (!AutoTestMode) {
+		printf("atpexmp: Calling Slp_OutputPrompt()\n");
 	  Slp_OutputPrompt();
+	}
 
 	/*
 	 *	If you have something to cleanup before exiting the program,
@@ -3602,6 +3686,7 @@ int main(argc, argv)
 	 *	command. See also note on the use of Tcl_DeleteInterp ()
 	 *	above.
 	 */
+	printf("atpexmp: Calling Slp_SetCleanupProc(%d)\n", Cleanup_Atpexmp);
 	Slp_SetCleanupProc(Cleanup_Atpexmp);
 
 	/*
@@ -3618,8 +3703,10 @@ int main(argc, argv)
 	 * Atp_LogTestFile() is defined here in atpexmp.c (see above).
 	 */
 
-	if (!AutoTestMode)
+	if (!AutoTestMode) {
+	  printf("atpexmp: Entering for loop\n");
 	  for (;;) {
+		 printf("atpexmp: Calling Slp_StdinHandler()\n");
 		 Slp_StdinHandler();
 		 Atp_LogTestFile(interp);
 #ifdef TCL_MEM_DEBUG
@@ -3631,6 +3718,7 @@ int main(argc, argv)
 		 }
 #endif
 	  }
+	}
 	else {
 		AutoTest_Loop(interp);
 	}

@@ -101,7 +101,7 @@ Atp_IsEmptyParmDef(CmdRecPtr)
 	Results:			Number of parameter entries.
 
 						Returns the number of entries in a parameter
-						definition table if Atp_2Tcl_CreateCommand()
+						definition table if Atp2Tcl_CreateCommand()
 						was NOT called from within a loop. (using
 						sizeof(pd)/sizeof(Atp_ParmDefEntry))
 
@@ -121,25 +121,29 @@ Atp_IsEmptyParmDef(CmdRecPtr)
 	Notes:	N/A
 
 	Modifications:
-		Who			When				Description
-	----------	-------------	----------------------------
-	Alwyn Teh	30 June 1992 	Initial Creation
+		Who			When					Description
+	----------	----------------	----------------------------
+	Alwyn Teh	30 June 1992 		Initial Creation
+	Alwyn Teh	30 December 2021	Handle empty parmdef
 
 *******************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
-int Atp_EvalNoOfParmDefEntries (Atp_ParmDefEntry *ParmDefPtr, int NoOfPDentries)
+int Atp_EvalNoOfParmDefEntries(Atp_ParmDefEntry *ParmDefPtr, int sizeOfPD)
 #else
 int
-Atp_EvalNoOfParmDefEntries(ParmDefPtr, NoOfPDentries)
+Atp_EvalNoOfParmDefEntries(ParmDefPtr, sizeOfPD)
 	Atp_ParmDefEntry	*ParmDefPtr;
-	int					NoOfPDentries;
+	int					sizeOfPD;
 #endif
 {
 	register int i;
 	register ParmDefEntry *ParmDefEntryPtr;
+	int NoOfPDentries = sizeOfPD / sizeof(Atp_ParmDefEntry);
 
-	if (ParmDefPtr == NULL)
+	printf("Atp_EvalNoOfParmDefEntries(): sizeOfPD = %d, NoOfPDentries = %d\n", sizeOfPD, NoOfPDentries);
+	if ((ParmDefPtr == NULL) || (sizeOfPD == 0))
 	{
+	  printf("atppmdef.c: Atp_EvalNoOfParmDefEntries() returns 0\n");
 	  return 0;
 	}
 	else
