@@ -119,7 +119,7 @@ static void			resize_handler _PROTO_((int));
 	Alwyn Teh	10 June 1993	Manage command register	in
 								atpcmd.c instead.
 	Alwyn Teh	29 June	1993	Manpage text pointer changed
-								to general helplnfo pointer
+								to general helpInfo pointer
 								in order to refer to manpage
 								header, footer and help text.
 	Alwyn Teh	1 July 1993		Return NULL if no name.
