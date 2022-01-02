@@ -2102,7 +2102,7 @@ Atp_Result LLC_Cmd(clientData, interp, argc, argv)
 
 	return_string = Atp_AdvGets();
 
-	Tcl_SetResult (interp, return_string, TCL_DYNAMIC) ;
+	Tcl_SetResult(interp, return_string, TCL_DYNAMIC);
 
 	return ATP_OK;
 }
@@ -2135,7 +2135,7 @@ Atp_Result LLC_TEST_Cmd(clientData, interp, arge, argv)
 
 	Atp_AdvPrintf("\"llc\" command test OK.");
 
-	Tcl_SetResult (interp, Atp_AdvGets(), TCL_DYNAMIC);
+	Tcl_SetResult(interp, Atp_AdvGets(), TCL_DYNAMIC);
 
 	return result;
 }
@@ -2260,7 +2260,7 @@ Atp_Result EstimateCmd(clientData, interp, argc, argv)
 
 	return_string = Atp_AdvGets();
 
-	Tcl_SetResult (interp, return_string, TCL_DYNAMIC) ;
+	Tcl_SetResult(interp, return_string, TCL_DYNAMIC);
 
 	return ATP_OK;
 

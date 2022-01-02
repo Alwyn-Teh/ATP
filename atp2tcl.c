@@ -1653,7 +1653,8 @@ static void
 Atp2Tcl_SetResultString( char *return_string, ... )
 #else
 static void
-Atp2Tcl_SetResultString (return_string, va_alist)
+Atp2Tcl_SetResultString(return_string, va_alist)
+	char *return_string;
 	va_dcl
 #endif
 {
@@ -1666,13 +1667,20 @@ Atp2Tcl_SetResultString (return_string, va_alist)
 	va_start(ap);
 #endif
 
+	printf("atp2tcl.c: Atp2Tcl_SetResultString() - 1\n");
 	(void)va_arg(ap, ClientData);
 
+	printf("atp2tcl.c: Atp2Tcl_SetResultString() - 2\n");
 	interp = va_arg(ap, Tcl_Interp *);
 
-	Tcl_SetResult(interp, return_string, TCL_DYNAMIC);
+	printf("atp2tcl.c: Atp2Tcl_SetResultString() - 3\n");
+	Tcl_SetResult(interp, return_string, TCL_VOLATILE);
+	printf("return_string = [%s]\n", return_string);
+	printf("Tcl_GetStringResult(interp) = [%s]\n", Tcl_GetStringResult(interp));
 
+	printf("atp2tcl.c: Atp2Tcl_SetResultString() - 4\n");
 	va_end(ap);
+	printf("atp2tcl.c: Atp2Tcl_SetResultString() - 5\n");
 }
 
 /*+****************+**************************************************

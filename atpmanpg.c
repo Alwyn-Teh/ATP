@@ -139,7 +139,7 @@ static char	*OptParm_Default_Notice[] =
 	"		the optional parameters are located at the end of the",
 	"		command, it is not necessary to enter anything to select the",
 	"		default values.",
-NULL
+	NULL
 };
 
 /* Macros */
