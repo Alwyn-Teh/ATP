@@ -557,7 +557,7 @@ Atp2Tcl_InternalCreateCommand(interp, name, desc, help_id,
 									instead of interp->result
 
 *******************************************************************-*/
-#if defined(__STDC__) || defined(_cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 static void Do_Tcl_Version_Copyright_Stuff(Tcl_Interp *interp)
 #else
 static void Do_Tcl_Version_Copyright_Stuff(interp)
@@ -659,7 +659,7 @@ static void Atp2Tcl_HelpCmdDeleteProc(clientdata, interp)
 		Atp_HelpCmdDeleteProc();
 }
 
-#if defined(__STDC__) || defined (__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 Atp_Result Atp2Tcl_Init( Tcl_Interp *interp )
 #else
 Atp_Result Atp2Tcl_Init(interp)
