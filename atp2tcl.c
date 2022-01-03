@@ -2008,7 +2008,7 @@ static Atp_Result Atp_HelpCmdGlueProc(cd, interp, argc, argv)
 	result = Atp_HelpCmd(cd, Atp2Tcl_HelpCmdGlueCallback, &ResultString);
 
 	if (ResultString != NULL)
-	  Tcl_SetResult(interp, ResultString, TCL_DYNAMIC);
+	  Tcl_SetResult(interp, ResultString, free);
 
 	_Atp2Tcl_GlueClientData_	= NULL;
 	_Atp2Tcl_GlueInterp_		= NULL;
