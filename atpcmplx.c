@@ -15,7 +15,7 @@
 						construct in order to save static program
 						space.
 
-	Comment:	This feature can be implemented if requested.
+	Comment:			This feature can be implemented if requested.
 
 *******************************************************************-*/
 

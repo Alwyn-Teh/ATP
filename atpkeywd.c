@@ -65,7 +65,7 @@ static int Atp_MatchKeyword _PROTO_((char *keyword, Atp_KeywordType *KeyTable));
 	Alwyn Teh	30 July 1992		Initial Creation
 	Alwyn Teh	27 November 1992	Adjust CurrArgvIdx
 	Alwyn Teh	9 June 1993			Add Atp_AppendParmName ()
-	Alwyn Teh	21 January'1994		Use malloced keyword_string and
+	Alwyn Teh	21 January 1994		Use malloced keyword_string and
 									free always after use.
 
 ********************************************************************-*/
@@ -81,7 +81,7 @@ Atp_ProcessKeywordParm(parseRec)
 	Atp_NumType		keyvalue	= 0;
 	Atp_UnsNumType	keyindex	= 0;
 	char			*keystring	= NULL;
-	Atp_KeywordType	*KeyTable	= Atp_ParseRecParmDefEntry(parseRec).KeyTabPtr ;
+	Atp_KeywordType	*KeyTable	= Atp_ParseRecParmDefEntry(parseRec).KeyTabPtr;
 	char			*errmsg		= NULL;
 
 	parseRec->ReturnStr = NULL;

@@ -72,7 +72,6 @@ Atp_ProcessNumParm(parseRec)
 	Atp_NumType	number	= 0;
 	char		*errmsg	= NULL;
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 1 [parseRec = %d]\n", parseRec);
 	parseRec->ReturnStr = NULL;
 
 	result = Atp_SelectInputAndParseParm(parseRec,
@@ -81,31 +80,26 @@ Atp_ProcessNumParm(parseRec)
 										 &number, &errmsg);
 
 	if (result == ATP_OK) {
-	  printf("atpnum.c: Atp_ProcessNumParm() - 2\n");
 	  if (parseRec->ValueUsedIsDefault)
 		number = (Atp_NumType) parseRec->defaultValue;
 	  else
 		parseRec->CurrArgvIdx++; /* next token */
 	}
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 3\n");
 	if (result == ATP_OK)
 	  result = Atp_CheckRange(&Atp_ParseRecParmDefEntry(parseRec),
 			  	  	  !(parseRec->ValueUsedIsDefault),number,&errmsg);
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 4\n");
 	if (result == ATP_OK)
 	  result = Atp_InvokeVproc(	&Atp_ParseRecParmDefEntry(parseRec),
 								&number,
 								!(parseRec->ValueUsedIsDefault),
 								&errmsg );
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 5\n");
 	if (result == ATP_OK)
 	  Atp_StoreParm(&Atp_ParseRecParmDefEntry(parseRec),
 			  	  	parseRec->ValueUsedIsDefault, number);
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 6\n");
 	if (result == ATP_ERROR) {
 	  if ((parseRec->ReturnStr == NULL) && (errmsg != NULL)) {
 		Atp_AppendParmName(parseRec, errmsg);
@@ -115,27 +109,25 @@ Atp_ProcessNumParm(parseRec)
 
 	parseRec->result = result;
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 7\n");
 	if (result == ATP_OK) {
 	  if (!parseRec->RptBlkTerminatorSize_Known)
 		parseRec->RptBlkTerminatorSize += sizeof(Atp_NumType);
 	}
 
-	printf("atpnum.c: Atp_ProcessNumParm() - 8\n");
 	return result;
 }
 
 /*+*******************************************************************
 
-	Function Name:	Atp_ProcessUnsNumParm
+	Function Name:		Atp_ProcessUnsNumParm
 
-	Copyright:	BNR Europe Limited, 1992, 1993
-	Bell-Northern Research
-	Northern Telecom
+	Copyright:			BNR Europe Limited, 1992, 1993
+						Bell-Northern Research
+						Northern Telecom
 
-	Description:	Unsigned number parameter	processor
-	handles input, default, range and vproc
-	checking, and parameter storage.
+	Description:		Unsigned number parameter processor
+						handles input, default, range and vproc
+						checking, and parameter storage.
 
 	Modifications:
 		Who			When					Description
@@ -293,7 +285,6 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 				OutOfRange;
 	Atp_Result	result = ATP_OK;
 
-	printf("atpnum.c: Atp_ParseNum() - 1\n");
 	/*
 		Since this parser accepts number or unsigned number,
 		potentially a wrong parmcode could be supplied. Check
@@ -310,12 +301,11 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 										ATP_ERRCODE_WRONG_PARMCODE_FOR_PARSER,
 										parm_arg_str, "number");
 	  }
-	  // va_end(argPtr);
 	  return ATP_ERROR;
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 2\n");
-	if (ErrorMsgPtr != NULL) *ErrorMsgPtr = NULL;
+	if (ErrorMsgPtr != NULL)
+	  *ErrorMsgPtr = NULL;
 	numStr = NULL;
 
 	/* Check that return value pointer is supplied. */
@@ -329,11 +319,9 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 										(parmcode == ATP_UNS_NUM) ?
 										"unsigned number" : "number");
 	  }
-	  // va_end(argPtr);
 	  return ATP_ERROR;
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 3\n");
 	/* Essential initialisations */
 	base = baseIsHex = baseIsOctal = baseIsBinary = 0;
 	src = NULL;
@@ -346,7 +334,6 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 						  "unsigned number" : "number",
 						  ErrorMsgPtr);
 
-	printf("atpnum.c: Atp_ParseNum() - 4\n");
 	if (result == ATP_ERROR) {
 	  if (src != NULL)
 		FREE(src);
@@ -355,22 +342,20 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 	  	return ATP_ERROR;
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 5\n");
 	/* Point to beginning of number string. Used for error messages only. */
 	saveStr = src;
 
 	/* Trim off any leading and trailing white spaces. */
 	{
-	char *ptr = &src[strlen(src)-1];
-	while (isspace(*src)) src++;
-	while (isspace(*ptr)) ptr--;
-	*(ptr+1) = '\0';
+		char *ptr = &src[strlen(src)-1];
+		while (isspace(*src)) src++;
+		while (isspace(*ptr)) ptr--;
+		*(ptr+1) = '\0';
 	}
 
 	/* Point to beginning of number string. Used for error messages only. */
 	numStr = src;
 
-	printf("atpnum.c: Atp_ParseNum() - 6\n");
 	/*
 		Is number indicating explicitly whether it is positive or
 		negative?
@@ -393,7 +378,6 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 	  return ATP_ERROR;
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 7\n");
 	/* Find out what base to use. */
 	switch (*src) {
 		/* Hexadecimal number */
@@ -443,7 +427,6 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 		}
 	} /* switch */
 
-	printf("atpnum.c: Atp_ParseNum() - 8\n");
 	/* Be strict, check sign again. */
 	if ((*src =='-') || (*src == '+'))
 	{
@@ -461,14 +444,13 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 		}
 		if (saveStr != NULL) FREE(saveStr);
 		*(Atp_UnsNumType *)numValPtr = 0;
-		// va_end(argPtr);
+
 		return ATP_ERROR;
 	  }
 	  else
 		numSign = *src; /* sign of number determined */
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 9\n");
 	/*
 		Negative sign not allowed for binary, octal and
 		hexadecimal numbers.
@@ -490,11 +472,10 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 	  }
 	  if (saveStr != NULL) FREE (saveStr);
 	  *(Atp_UnsNumType *)numValPtr = 0;
-	  // va_end(argPtr);
+
 	  return ATP_ERROR;
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 10\n");
 	/* Initialise more variables about to be used. */
 
 	/*
@@ -531,7 +512,6 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 	  *(Atp_NumType *)numValPtr = (Atp_NumType)strtol(src, &endPtr, base);
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 11\n");
 	OutOfRange = errno; /* preserve errno value */
 
 	/*
@@ -568,11 +548,10 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 
 	  if (saveStr != NULL) FREE(saveStr);
 	  *(Atp_UnsNumType *)numValPtr = 0;
-	  // va_end(argPtr);
+
 	  return ATP_ERROR;
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 12\n");
 	/*
 		Check overflow after strtol() has done the syntax
 		checking !! You know by now a number has definitely been
@@ -581,30 +560,23 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 	 */
 	if (CheckNumberOverFlow(src, endPtr, parmcode, base, ErrorMsgPtr) == ATP_ERROR)
 	{
-	  printf("atpnum.c: Atp_ParseNum() - 12.1\n");
 	  /*
 			NOTE: CheckNumberOverFlow() returns error message in
 			ErrorMsgPtr if error encountered.
 	   */
 	  if (saveStr != NULL) {
-		printf("atpnum.c: Atp_ParseNum() - 12.2\n");
 		FREE(saveStr);
 	  }
 
 	  *(Atp_UnsNumType *) numValPtr = 0;
 
-	  // va_end(argPtr);
-
-	  printf("atpnum.c: Atp_ParseNum() - 12.3\n");
 	  return ATP_ERROR;
 	}
 	else
 	{
-	  printf("atpnum.c: Atp_ParseNum() - 12.4\n");
 	  /* double-check errno (OutOfRange) just in case */
 	  if (OutOfRange == ERANGE)
 	  {
-		printf("atpnum.c: Atp_ParseNum() - 12.5\n");
 		if (ErrorMsgPtr != NULL)
 		{
 		  *ErrorMsgPtr = Atp_MakeErrorMsg(ERRLOC, ATP_ERRCODE_NUM_OUT_OF_RANGE,
@@ -613,29 +585,20 @@ Atp_ParseNum(input_src, parmcode, numValPtr, ErrorMsgPtr)
 										  numStr);
 		}
 
-		printf("atpnum.c: Atp_ParseNum() - 12.6\n");
 		if (saveStr != NULL) {
-		  printf("atpnum.c: Atp_ParseNum() - 12.7\n");
 		  FREE(saveStr);
 		}
 
 		*(Atp_UnsNumType *)numValPtr = 0;
 
-		// va_end(argPtr);
-
-		printf("atpnum.c: Atp_ParseNum() - 12.8\n");
 		return ATP_ERROR;
 	  }
 	}
 
-	printf("atpnum.c: Atp_ParseNum() - 13\n");
 	/* Everything ok, return. */
 	if (saveStr != NULL)
 	  FREE(saveStr);
 
-	// va_end(argPtr);
-
-	printf("atpnum.c: Atp_ParseNum() - 14\n");
 	return ATP_OK;
 }
 
@@ -776,7 +739,6 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 		{NUMBER_BUFFER12, NUMBER_BUFFER12}
 	};
 
-	printf("atpnum.c: CheckNumberOverFlow() - 1\n");
 	register char	*src = SrcStart;
 
 	/* Initialisations */
@@ -795,7 +757,6 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 	  number_sign = POSITIVE;
 	}
 
-	printf("atpnum.c: CheckNumberOverFlow() - 2\n");
 	/*
 		Skip any notational prefixes if base 0 was used with
 		strtol(). With other bases denotated by "HEX", "H",
@@ -818,7 +779,6 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 	  }
 	}
 
-	printf("atpnum.c: CheckNumberOverFlow() - 3\n");
 	/* MUST skip leading zeros after optional sign. */
 	while (*src == '0') src++;
 
@@ -839,7 +799,6 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 		default : goto theEnd; /* no checking available */
 	}
 
-	printf("atpnum.c: CheckNumberOverFlow() - 4\n");
 	/*
 		Get number type (signed or unsigned) index, and the
 		minimum and maximum limits.
@@ -864,26 +823,21 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 			goto theEnd; /* no checking available */
 	}
 
-	printf("atpnum.c: CheckNumberOverFlow() - 5\n");
 	/*
 		Check minimum or maximum limit. Then sprintf the limit
 		string into the buffer if not already done so.
 	*/
 	if (number_sign == POSITIVE)
 	{
-	  printf("atpnum.c: CheckNumberOverFlow() - 5.1\n");
 	  if (MaxLimits[notationIdx][numberTypeIdx] == NULL)
 	  {
-		printf("atpnum.c: CheckNumberOverFlow() - 5.2\n");
 		goto theEnd; /* conversion not available */
 	  }
 	  else
 	  if (MaxLimits[notationIdx][numberTypeIdx][0] == ' ')
 	  {
-		printf("atpnum.c: CheckNumberOverFlow() - 5.3\n");
 		if (numBase == 2)
 		{
-		  printf("atpnum.c: CheckNumberOverFlow() - 5.4\n");
 		  int dig, numOfBits;
 
 		  /*
@@ -898,36 +852,26 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 			 MaxLimits[notationIdx][numberTypeIdx][dig] = '1';
 
 		  MaxLimits[notationIdx][numberTypeIdx][numOfBits] = '\0';
-		  printf("atpnum.c: CheckNumberOverFlow() - 5.5\n");
 		}
 		else {
-		  printf("atpnum.c: CheckNumberOverFlow() - 5.6\n");
-		  printf("    notationIdx = %d\n", notationIdx);
-		  printf("    numberTypeIdx = %d\n", numberTypeIdx);
 		  (void) sprintf(MaxLimits[notationIdx][numberTypeIdx],
 						 FmtConv[notationIdx][numberTypeIdx],
 						 maxLimit);
-		  printf("atpnum.c: CheckNumberOverFlow() - 5.7\n");
 		}
 	  }
 
-	  printf("atpnum.c: CheckNumberOverFlow() - 5.8\n");
 	  LimitLen = strlen(MaxLimits[notationIdx][numberTypeIdx]);
 
 	  limitCmpStr =
 	    LimitString =
 	    		MaxLimits[notationIdx][numberTypeIdx];
-
-	  printf("atpnum.c: CheckNumberOverFlow() - 6\n");
 	}
 	else
 	{
-	  printf("atpnum.c: CheckNumberOverFlow() - 7\n");
 	  /* Number_sign is NEGATIVE */
 
 	  if (MinLimits[notationIdx][numberTypeIdx] == NULL)
 	  {
-		printf("atpnum.c: CheckNumberOverFlow() - 8\n");
 		goto theEnd; /* conversion not available */
 	  }
 	  else
@@ -949,7 +893,6 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 		limitCmpStr += 1; /* skip the minus sign */
 		LimitLen -= 1; /* less the '-' sign */
 	  }
-	  printf("atpnum.c: CheckNumberOverFlow() - 9\n");
 	}
 
 	/* Compare numbers lexicographically. */
@@ -957,10 +900,8 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 
 	lexcmp_result = 0;
 
-	printf("atpnum.c: CheckNumberOverFlow() - 10\n");
 	if (numLen == LimitLen)
 	{
-	  printf("atpnum.c: CheckNumberOverFlow() - 11\n");
 	  lexcmp_result = Atp_Strcmp(src, limitCmpStr);
 
 	  if (lexcmp_result <= 0)
@@ -979,12 +920,10 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 		  lexcmp_result = UNDERFLOW_ERROR;
 		}
 	  }
-	  printf("atpnum.c: CheckNumberOverFlow() - 12\n");
 	}
 	else
 	if (numLen > LimitLen)
 	{
-	  printf("atpnum.c: CheckNumberOverFlow() - 13\n");
 	  if (number_sign == POSITIVE)
 	  {
 		lexcmp_result = OVERFLOW_ERROR;
@@ -1002,11 +941,9 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 		so continue to leave function.
 	 */
 
-	printf("atpnum.c: CheckNumberOverFlow() - 14\n");
 	if ((lexcmp_result == OVERFLOW_ERROR) ||
 		(lexcmp_result == UNDERFLOW_ERROR))
 	{
-	  printf("atpnum.c: CheckNumberOverFlow() - 15\n");
 	  if (ErrorMsgPtr != NULL)
 	  {
 		int error_code;
@@ -1028,12 +965,9 @@ CheckNumberOverFlow(SrcStart, SrcEnd, parmcode, numBase, ErrorMsgPtr)
 																				"decimal",
 										LimitString);
 	  }
-	  printf("atpnum.c: CheckNumberOverFlow() - 16\n");
 	  result = ATP_ERROR;
 	  goto theEnd;
 	}
-
-	printf("atpnum.c: CheckNumberOverFlow() - 17\n");
 
 theEnd:
 

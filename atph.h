@@ -120,6 +120,7 @@
 	Alwyn Teh			20 June 1995	New subsystem ATP.AC12
 	Alwyn Teh			21 June 1995	Export Atp_Used_By_G30 and
 										Atp_EnumerateProtocolFieldValues().
+
 *****************************************************************************-*/
 #ifndef _ATP
 #define _ATP
@@ -1179,12 +1180,12 @@ EXTERN int	Atp_AdvResetBuffer _PROTO_((void));
 #define ATP_MEMDEBUG_CMD	"checkmem"
 
 #define Atp_Strdup(s)		Atp_MemDebug_Strdup((s), __FILE__, __LINE__)
-EXTERN char *				Atp_MemDebug_Strdup _PROTO_(char *s,
+EXTERN char *				Atp_MemDebug_Strdup _PROTO_((char *s,
 														char *filename,
-														int line_number);
+														int line_number));
 
-EXTERN void					Atp_MemDebugLocn _PROTO_(char *filename,
-													 int line_number);
+EXTERN void					Atp_MemDebugLocn _PROTO_((char *filename,
+													 int line_number));
 
 #define Atp_DvsPrintf		(Atp_MemDebugLocn(__FILE_,__LINE__),\
 							 Atp_MemDebugDvsPrintf)

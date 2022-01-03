@@ -37,7 +37,7 @@
 	Alwyn Teh	5	October 1993	See below...
 
 					A repeat block within a repeat block is displayed as:
-							<rpt_blk0> ::= ( < <rpt_blkl> > ... )
+							<rpt_blk0> ::= ( < <rpt_blk1> > ... )
 
 					The extra < > signs are only useful for, say,
 							<rpt_blk0> ::= ( < <pl> <p2> <p3> > ... )
@@ -263,8 +263,6 @@ va_dcl
 	CommandRecord			*CmdRecPtr;
 	char					*cmdname, *manpage, *errmsg;
 
-	printf("Atp_DisplayManPage - 1\n");
-
 	/* Extract stack frame from variable arguments list. */
 #if defined(__STDC__) || defined(__cplusplus)
 	callframe.stack[0] = ArgvO;
@@ -276,15 +274,11 @@ va_dcl
 #endif
 	va_end(ap);
 
-	printf("Atp_DisplayManPage - 2\n");
-
 	/*
 		Get external clientdata containing execution information
 		required.
 	 */
 	clientData = (void *) (*Atp_GetExternalClientData)(ATP_FRAME_RELAY(callframe));
-
-	printf("Atp_DisplayManPage - 3\n");
 
 	/*
 		Get command table access descriptor record pointer from
@@ -293,65 +287,47 @@ va_dcl
 	CmdTableAccessDesc = (Atp_CmdTabAccessType *)
 							(*Atp_GetCmdTabAccessRecord)(clientData);
 
-	printf("Atp_DisplayManPage - 4\n");
-
 	/* Get pointer to entry in command table. */
 	cmdname = Atp_StrToLower(Atp_Str("name"));
 	CmdEntryPtr = (*CmdTableAccessDesc->FindCmdTabEntry)
 									(CmdTableAccessDesc, cmdname);
 
-	printf("Atp_DisplayManPage - 5\n");
-
 	/* Command does not exists. */
 	if (CmdEntryPtr == NULL) {
-	  printf("Atp_DisplayManPage - 6\n");
-	/* See if language manpage (e.g. Tcl) required. */
+	  /* See if language manpage (e.g. Tcl) required. */
 	  if (Atp_Strcmp(NameOfFrontEndToAtpAdaptor, cmdname) == 0) {
-		printf("Atp_DisplayManPage - 7\n");
 		if (Atp_GetFrontEndManpage != NULL) {
-		  printf("Atp_DisplayManPage - 8\n");
 		  Atp_Result result = ATP_OK;
 		  result = (*Atp_GetFrontEndManpage)(ATP_FRAME_RELAY(callframe));
-		  printf("Atp_DisplayManPage - 9\n");
 		  return result;
 		}
 	  }
-	  printf("Atp_DisplayManPage - 10\n");
 	  Atp_DvsPrintf(&errmsg, "Command \"%s\" does not exist.", cmdname);
 	  Atp_ReturnDynamicStringToAdaptor(errmsg,ATP_FRAME_RELAY(callframe));
-	  printf("Atp_DisplayManPage - 11\n");
 	  return ATP_ERROR;
 	}
 	else {
-	  printf("Atp_DisplayManPage - 12\n");
 	  /* Command exists, see if it's an ATP command. */
 	  CmdRecPtr = (CommandRecord *)(*CmdTableAccessDesc->CmdRec)(CmdEntryPtr);
 	  if (CmdRecPtr == NULL) {
-		printf("Atp_DisplayManPage - 13\n");
 		/* Not an ATP command, find Tcl command manpage. */
 		if (Atp_GetFrontEndManpage != NULL) {
-		  printf("Atp_DisplayManPage - 14\n");
 		  Atp_Result result = ATP_OK;
 		  result = (*Atp_GetFrontEndManpage)(ATP_FRAME_RELAY(callframe));
-		  printf("Atp_DisplayManPage - 15\n");
 		  return result;
 		}
 	  }
 	  else {
-		printf("Atp_DisplayManPage - 16\n");
 		/* ATP command found, make manpage for it. */
 		manpage = Atp_GenerateParmDefManPage(CmdRecPtr);
 
-		printf("Atp_DisplayManPage - 17\n");
 		/*
 			Call externally supplied function which will accept
 			the help page output.
 		 */
 		Atp_ReturnDynamicHelpPage(manpage, ATP_FRAME_RELAY(callframe));
-		printf("Atp_DisplayManPage - 18\n");
 	  }
 
-	  printf("Atp_DisplayManPage - 19\n");
 	  return ATP_OK;
 	}
 }
@@ -396,8 +372,6 @@ Atp_GenerateParmDefManPage(CmdRecPtr)
 	char	*column_env_str = getenv("COLUMNS");
 	int		colenv;
 
-	printf("Atp_GenerateParmDefManPage - 1 (%s)\n", CmdRecPtr->cmdName);
-
 	Atp_ManPgLineWrap_Flag = 1; /* ensure set to 1 */
 	column = 1;
 
@@ -413,8 +387,6 @@ Atp_GenerateParmDefManPage(CmdRecPtr)
 	  return error_msg;
 	}
 
-	printf("Atp_GenerateParmDefManPage - 2 (CmdRecPtr->cmdNameOrig = %s)\n", CmdRecPtr->cmdNameOrig);
-
 	Atp_AdvPrintf ("\nNAME\n") ;
 	column = 1;
 	Atp_DisplayIndent(indent);
@@ -425,13 +397,9 @@ Atp_GenerateParmDefManPage(CmdRecPtr)
 						"%s - %s\n",
 						CmdRecPtr->cmdNameOrig, CmdRecPtr->cmdDesc );
 
-	printf("Atp_GenerateParmDefManPage - 3\n");
-
 	Atp_AdvPrintf ("\nSYNOPSIS\n");
 	column = 1;
 	Atp_DisplayManPageSynopsis(CmdRecPtr);
-
-	printf("Atp_GenerateParmDefManPage - 4\n");
 
 	Atp_AdvPrintf ("\nDESCRIPTION\n");
 	column = 1;
@@ -440,7 +408,6 @@ Atp_GenerateParmDefManPage(CmdRecPtr)
 							indent);
 	Atp_DisplayManPageDescription(CmdRecPtr);
 
-	printf("Atp_GenerateParmDefManPage - 5\n");
 	if (optional_parm_present) {
 	  int x;
 	  Atp_AdvPrintf("\n");
@@ -450,16 +417,12 @@ Atp_GenerateParmDefManPage(CmdRecPtr)
 
 	Atp_AdvPrintf("\n");
 
-	printf("Atp_GenerateParmDefManPage - 6\n");
 	Atp_DisplayCmdHelpInfo( (Atp_CmdRec *)CmdRecPtr,
 							ATP_MANPAGE_FOOTER,
 							indent);
 
-	printf("Atp_GenerateParmDefManPage - 7\n");
 	ManPage = Atp_AdvGets();
 
-	printf("Atp_GenerateParmDefManPage - 8\n");
-	printf("%s\n", ManPage);
 	return ManPage;
 }
 
@@ -488,28 +451,21 @@ void Atp_DisplayManPageSynopsis (CmdRecPtr)
 	CommandRecord *CmdRecPtr;
 #endif
 {
-	printf("Atp_DisplayManPageSynopsis - 1\n");
-
 	int NoOfParms = 0;
 
 	Atp_DisplayIndent(ATP_MANPG_INDENT);
 	column += ATP_MANPG_INDENT;
 
-	printf("Atp_DisplayManPageSynopsis - 2\n");
 	Atp_AdvPrintf ("%s", CmdRecPtr->cmdNameOrig);
 	column += strlen(CmdRecPtr->cmdNameOrig);
 
-	printf("Atp_DisplayManPageSynopsis - 3\n");
 	if ((CmdRecPtr->parmDef == NULL) || (Atp_IsEmptyParmDef(CmdRecPtr)))
 	{
-	  printf("Atp_DisplayManPageSynopsis - 4\n");
 	  Atp_AdvPrintf("\n");
 	  column = 1;
-	  printf("Atp_DisplayManPageSynopsis - 5\n");
 	  return;
 	}
 	else {
-	  printf("Atp_DisplayManPageSynopsis - 6\n");
 	  Atp_PrintParmsInNotationFormat(CmdRecPtr->parmDef,
 									 (Atp_PDindexType) 0,
 									 &NoOfParms,
@@ -523,10 +479,8 @@ void Atp_DisplayManPageSynopsis (CmdRecPtr)
 
 	  Atp_AdvPrintf("\n");
 	  column = 1;
-	  printf("Atp_DisplayManPageSynopsis - 7 (NoOfParms = %d)\n", NoOfParms);
 	}
 
-	printf("Atp_DisplayManPageSynopsis - 8\n");
 	return;
 }
 
@@ -1136,8 +1090,6 @@ Atp_PrintParmsInNotationFormat(parmdef, start_index, NoOfParmsPtr, indent)
 	int				indent;
 #endif
 {
-	printf("Atp_PrintParmsInNotationFormat - 1\n");
-
 	register Atp_PDindexType	parm_idx = start_index;
 	register Atp_ParmCode		CurrParmCode, Start_ParmCode;
 
@@ -1146,14 +1098,10 @@ Atp_PrintParmsInNotationFormat(parmdef, start_index, NoOfParmsPtr, indent)
 
 	Start_ParmCode = parmdef[start_index].parmcode;
 
-	printf("Atp_PrintParmsInNotationFormat - 2\n");
-
 	/* Skip BEGIN_PARMS and BEGIN_REPEAT. */
 	if (Atp_PARMCODE(Start_ParmCode) == ATP_BPM)
 	{
-	  printf("Atp_PrintParmsInNotationFormat - 3\n");
 	  Atp_PrintParmSequence(parmdef, 1, stop_index, &NoOfParms, indent);
-	  printf("Atp_PrintParmsInNotationFormat - 4\n");
 	}
 	else
 	/* Scan parmdef and print parameters in notation format. */
@@ -1163,38 +1111,29 @@ Atp_PrintParmsInNotationFormat(parmdef, start_index, NoOfParmsPtr, indent)
 
 		switch (Atp_PARMCODE(CurrParmCode)) {
 			case ATP_BLS:
-			case ATP_BCS:	printf("Atp_PrintParmsInNotationFormat - 5\n");
-							Atp_PrintListInNotationFormat(
+			case ATP_BCS:	Atp_PrintListInNotationFormat(
 									parmdef, parm_idx, indent);
 							break;
-			case ATP_BRP:	printf("Atp_PrintParmsInNotationFormat - 6\n");
-							Atp_PrintRepeatBlockInNotationFormat(
+			case ATP_BRP:	Atp_PrintRepeatBlockInNotationFormat(
 									parmdef, parm_idx, indent);
 							break;
-			case ATP_BCH:	printf("Atp_PrintParmsInNotationFormat - 7\n");
-							Atp_PrintChoiceInNotationFormat(
+			case ATP_BCH:	Atp_PrintChoiceInNotationFormat(
 									parmdef, parm_idx, indent);
 							break;
 			default:		break;
 		}
 
-		printf("Atp_PrintParmsInNotationFormat - 8\n");
-
 		if (isAtpBeginConstruct(CurrParmCode)) {
-		  printf("Atp_PrintParmsInNotationFormat - 9\n");
 		  parm_idx = parmdef[parm_idx].matchIndex;
 		}
 
 		parm_idx++;
 		NoOfParms++;
-		printf("Atp_PrintParmsInNotationFormat - 10\n");
 	}
 
 	/* Return number of parameters found if required. */
 	if (NoOfParmsPtr != NULL)
 	  *NoOfParmsPtr = NoOfParms;
-
-	printf("Atp_PrintParmsInNotationFormat - 11\n");
 }
 
 /*+*******************************************************************
@@ -1514,52 +1453,42 @@ Atp_PrintParmSequence(parmdef, start_index, stop_index, count_jptr, indent)
 	int				*count_ptr, indent;
 #endif
 {
-	printf("Atp_PrintParmSequence - 1\n");
 	register int counter = 0;
 	register Atp_PDindexType parm_idx = start_index;
 	Atp_ParmCode CurrParmCode;
 
-	printf("Atp_PrintParmSequence - 2\n");
 	while (parm_idx < stop_index) {
 		CurrParmCode = parmdef[parm_idx].parmcode;
 		OPTPARM_CHECK(CurrParmCode);
 
 		/* Open square bracket to indicate optional parameter. */
 		if (AtpParmIsOptional(CurrParmCode)) {
-		  printf("Atp_PrintParmSequence - 3\n");
 		  Atp_AdvPrintf(" [");
 		  column += 2;
 		}
 
 		/* Print parameter name. */
-		printf("Atp_PrintParmSequence - 4 (%s)\n", parmdef[parm_idx].Name);
 		CheckCursorColumnAndWrapLine(strlen(parmdef[parm_idx].Name) + 3, indent);
 		Atp_AdvPrintf(" <%s>", parmdef[parm_idx].Name);
-		printf("----------");
 		column += strlen(parmdef[parm_idx].Name) + 3;
 
-		printf("Atp_PrintParmSequence - 5\n");
 		/* Close square bracket to delimit optional parameter. */
 		if (AtpParmIsOptional(CurrParmCode)) {
-		  printf("Atp_PrintParmSequence - 6\n");
 		  Atp_AdvPrintf(" ]");
 		  column += 2;
 		}
 
-		printf("Atp_PrintParmSequence - 7\n");
 		if (isAtpBeginConstruct(CurrParmCode)) {
 		  parm_idx = parmdef[parm_idx].matchIndex;
 		}
 
 		parm_idx++;
 		counter++;
-		printf("Atp_PrintParmSequence - 8\n");
 	}
 
 	/* Return number of parameters found. */
 	if (count_ptr != NULL)
 	  *count_ptr = counter;
-	printf("Atp_PrintParmSequence - 9\n");
 }
 
 /*+*******************************************************************
@@ -1725,7 +1654,7 @@ Atp_PrintConst ruetComponents(parmdef, start_index, parent_section_number, inden
 			}
 			column = Atp_PrintfWordWrap(Atp_AdvPrintf,
 										-1, column, local_indent+3,
-										"<%s> is \"%sV', ",
+										"<%s> is \"%s\", ",
 										parmdef[parm_idx] .Name,
 										parmdef[parm_idx].Desc);
 

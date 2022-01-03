@@ -153,14 +153,10 @@ Atp_AssembleCmdRecord(name,desc,cb,pd,ne,cd)
 {
 	CommandRecord *xcmd;
 
-	printf("Atp_AssembleCmdRecord - 1\n");
-
 	if (name == NULL || *name == '\0')
 	  return NULL;
 
 	xcmd = (CommandRecord *)CALLOC(1, sizeof(CommandRecord), NULL);
-
-	printf("Atp_AssembleCmdRecord - 2\n");
 
 	/*
 	 *	Command name may contain mixed upper/lower case letters
@@ -170,25 +166,14 @@ Atp_AssembleCmdRecord(name,desc,cb,pd,ne,cd)
 	 *	sensitive mode.
 	 */
 	xcmd->cmdNameOrig	= Atp_Strdup(name);
-	printf("Atp_AssembleCmdRecord - 2.1\n");
 	xcmd->cmdName		= Atp_StrToLower(name);
-	printf("Atp_AssembleCmdRecord - 2.2\n");
 	xcmd->cmdDesc		= Atp_Strdup(desc);
-	printf("Atp_AssembleCmdRecord - 2.3\n");
 	xcmd->helpInfo		= NULL;
-	printf("Atp_AssembleCmdRecord - 2.4\n");
 	xcmd->callBack		= cb;
-	printf("Atp_AssembleCmdRecord - 2.5\n");
 	xcmd->parmDef		= (ParmDefEntry *)pd;
-	printf("Atp_AssembleCmdRecord - 2.6\n");
 	xcmd->NoOfPDentries	= ne;
-	printf("Atp_AssembleCmdRecord - 2.7\n");
 	xcmd->clientData	= cd;
-	printf("Atp_AssembleCmdRecord - 2.8\n");
-
 	xcmd->Atp_ID_Code	= ATP_IDENTIFIER_CODE;
-
-	printf("Atp_AssembleCmdRecord - 3\n");
 
 	return (Atp_CmdRec *)xcmd;
 }

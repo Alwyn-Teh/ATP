@@ -3,6 +3,8 @@
 	<name>ATP</name>
 	<comment></comment>
 	<projects>
+		<project>SLP</project>
+		<project>Tcl</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

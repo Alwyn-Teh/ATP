@@ -140,10 +140,8 @@ Atp_EvalNoOfParmDefEntries(ParmDefPtr, sizeOfPD)
 	register ParmDefEntry *ParmDefEntryPtr;
 	int NoOfPDentries = sizeOfPD / sizeof(Atp_ParmDefEntry);
 
-	printf("Atp_EvalNoOfParmDefEntries(): sizeOfPD = %d, NoOfPDentries = %d\n", sizeOfPD, NoOfPDentries);
 	if ((ParmDefPtr == NULL) || (sizeOfPD == 0))
 	{
-	  printf("atppmdef.c: Atp_EvalNoOfParmDefEntries() returns 0\n");
 	  return 0;
 	}
 	else

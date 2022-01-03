@@ -120,8 +120,6 @@ Atp_VerifyParmDef(parmdef, entries)
 {
 		Atp_ParmCode FirstEntryParmCode, LastEntryParmCode;
 
-		printf("atpcheck.c: Atp_VerifyParmDef(parmdef %d, entries %d)\n", parmdef, entries);
-
 		/*
 			 Begin by checking if construct brackets are matching
 			 properly.
@@ -129,11 +127,8 @@ Atp_VerifyParmDef(parmdef, entries)
 		FirstEntryParmCode = parmdef[0].parmcode;
 		LastEntryParmCode = parmdef[entries - 1].parmcode;
 
-		printf("atpcheck.c: Atp_VerifyParmDef(FirstEntryParmCode = %d, LastEntryParmCode = %d)\n", FirstEntryParmCode, LastEntryParmCode);
-
 		if (!isAtpBeginConstruct(FirstEntryParmCode) ||
 			!isAtpEndConstruct(LastEntryParmCode)) {
-		  printf("atpcheck.c: Atp_VerifyParmDef() returns ATP_ERRCODE_NO_PARMDEF_OUTER_BEGIN_END\n");
 		  return ATP_ERRCODE_NO_PARMDEF_OUTER_BEGIN_END;
 		} else {
 			/*
@@ -161,34 +156,22 @@ Atp_VerifyCmdRecParmDef (Atp_CmdRecPtr)
 		int				result = 0;
 		char			*result_str = NULL; /* NULL indicates parmdef OK */
 
-		printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 1\n");
 		if (CmdRecPtr == NULL)
 		  return NULL;
 
-		printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 2\n");
 		if (CmdRecPtr->parmDef == NULL)
 			return NULL;
 
-		printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 3\n");
 		if (CmdRecPtr->ParmDefChecked)
 			return NULL;
-
-		printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 4 calling Atp_VerifyParmDef() - CmdRecPtr->parmDef = %d, CmdRecPtr->NoOfPDentries = %d\n", CmdRecPtr->parmDef, CmdRecPtr->NoOfPDentries);
 
 		result = Atp_VerifyParmDef((Atp_ParmDefEntry*) CmdRecPtr->parmDef,
 													   CmdRecPtr->NoOfPDentries);
 
-		printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 5\n");
 		if (result != 0) {
-		  printf("Atp_VerifyParmDef() returned %d\n", result);
 		  Atp_ShowErrorLocation();
 		  result_str = Atp_MakeErrorMsg(ERRLOC, result, CmdRecPtr->cmdName);
-		  printf("result_str = %s\n", result_str);
-		  printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 6\n");
 		}
-
-		printf("Atp_VerifyParmDef() returned %d\n", result);
-		printf("atpcheck.c: Atp_VerifyCmdRecParmDef() - 7\n");
 
 		return result_str;
 

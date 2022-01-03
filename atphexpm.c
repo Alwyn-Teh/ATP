@@ -394,25 +394,26 @@ Atp_RetrieveDataBytesParm(dataParmName, NumOfBytes, filename, line_number)
 
 	Function Name:		Atp_RetrieveDataBytesDescriptor
 
-	Copyright:	BNR Europe Limited, 1993
-	Bell-Northern Research
-	Northern Telecom
+	Copyright:			BNR Europe Limited, 1993
+						Bell-Northern Research
+						Northern Telecom
 
-	Description:	Retrieves the databytes parameter	as
-	a Atp_DataDescriptor structure.
+	Description:		Retrieves the databytes parameter as
+						a Atp_DataDescriptor structure.
 
 	Modifications:
-	Who	When	Description
-	Alwyn Teh	20 May 1993	Initial Creation
+		Who			When				Description
+	----------	--------------	-----------------------------
+	Alwyn Teh	20 May 1993		Initial Creation
 	Alwyn Teh	27 March 1995	Correct error function ID,
-	should be Atp_DataBytesDesc()
-	and not Atp_DataBytes()-
+								should be Atp_DataBytesDesc()
+								and not Atp_DataBytes()
 
 *******************************************************************-*/
 #if defined(__STDC__) || defined(__cplusplus)
 Atp_DataDescriptor
 Atp_RetrieveDataBytesDescriptor(char *dataParmName,
-char *filename, int line_number)
+								char *filename, int line_number)
 #else
 Atp_DataDescriptor
 Atp_RetrieveDataBytesDescriptor(dataParmName, filename, line_number)
@@ -453,7 +454,7 @@ Atp_RetrieveDataBytesDescriptor(dataParmName, filename, line_number)
 						Bell-Northern Research / BNR
 						Northern Telecom / Nortel
 
-	Description:		Display Atp_DataDescriptor	as a hex string.
+	Description:		Display Atp_DataDescriptor as a hex string.
 
 	Modifications:
 		Who			When			Description

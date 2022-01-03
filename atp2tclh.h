@@ -103,20 +103,20 @@ EXTERN Atp_Result	Atp2Tcl_AddHelpInfo _PROTO_((Tcl_Interp *interp,
 /* FOR ATP INTERNAL USE ONLY */
 EXTERN int			Atp2Tcl_Adaptor _PROTO_(_TCL_CMD_CALLBACK_ARGS_);
 EXTERN Atp_Result	Atp2Tcl_InternalCreateCommand
-					_PROTO_((Tcl_Interp *interp,
-							 char *name, char *desc,
-							 int help_id,
-							 Atp_Result (*callback)
-							 	 	 _PROTO_((ClientData clientdata,
-							 	 			  Tcl_Interp *interp,
-											  int argc,
-											  char **argv)),
-							 Atp_ParmDef parmdef,
-							 int sizeof_parmdef,
-							 ClientData clientdata,
-							 Tcl_CmdDeleteProc *deleteproc,
-							 char *filename, int linenumber,
-							 Atp_CmdRec **retum_cmd_rec));
+						_PROTO_((Tcl_Interp *interp,
+								 char *name, char *desc,
+								 int help_id,
+								 Atp_Result (*callback)
+										 _PROTO_((ClientData clientdata,
+												  Tcl_Interp *interp,
+												  int argc,
+												  char **argv)),
+								 Atp_ParmDef parmdef,
+								 int sizeof_parmdef,
+								 ClientData clientdata,
+								 Tcl_CmdDeleteProc *deleteproc,
+								 char *filename, int linenumber,
+								 Atp_CmdRec **retum_cmd_rec));
 
 typedef int			(*PFI)_PROTO_((char *format_string _VARARGS_));
 EXTERN PFI			Atp2Tcl_GetPager _PROTO_((Tcl_Interp *interp));

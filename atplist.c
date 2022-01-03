@@ -44,7 +44,7 @@ static Atp_Result Atp_ParseList _PROTO_((char *dummy_src,
 	Alwyn Teh	9 June 1993			Add Atp_AppendParmName()
 
 ********************************************************************-*/
-#if defined (__STDC_) || defined (__cplusplus)
+#if defined (__STDC__) || defined (__cplusplus)
 Atp_Result Atp_ProcessListConstruct( Atp_ParserStateRec *parseRec )
 #else
 Atp_Result

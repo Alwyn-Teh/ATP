@@ -256,7 +256,7 @@ static char * GetCommandName(ptr) void *ptr; { return (char *)ptr; }
 int Atp_CreateHelpArea( char *help_area_name, char *help_area_desc )
 #else
 int
-Atp_CreateHelpArea (help_area_name, help_area_desc>
+Atp_CreateHelpArea(help_area_name, help_area_desc)
 	char *help_area_name;
 	char *help_area_desc;
 #endif
@@ -283,7 +283,7 @@ Atp_CreateHelpArea (help_area_name, help_area_desc>
 	  Atp_HelpParmDef = (Atp_ParmDefEntry *)
 							CALLOC( CurrHelpParmDefSize += SPAREROOM,
 									sizeof(Atp_ParmDefEntry),
-									NULL);
+									NULL );
 
 	  /* Make a copy of the basic HELP parmdef. */
 	  /* Also, initialize help ids for default help areas. */
@@ -487,7 +487,7 @@ static Atp_HelpInfoType * NewHelpInfoRec ()
 								ATP_EOP!
 
 ★★******************************************************************-*/
-#if defined(_STDC___) || defined(__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 int Atp_AddCmdToHelpArea( int help_area_id, Atp_CmdRec *CmdRecPtr )
 #else
 int Atp_AddCmdToHelpArea(help_area_id, CmdRecPtr)
@@ -591,6 +591,7 @@ int Atp_AddCmdToHelpArea(help_area_id, CmdRecPtr)
 
 #undef DEFAULT_NO_OF_CMDRECS
 }
+
 /*+*****************************************************************
 
 	Function Name:		Atp_GetHelpAreaInfoRec
@@ -627,17 +628,17 @@ int Atp_AddCmdToHelpArea(help_area_id, CmdRecPtr)
 *******************************************************************-*/
 #if defined (__STDC__) || defined (__cplusplus)
 static Atp_HelpInfoType *
-Atp_GetHelpAreaInfoRec( char *HelpAreaName, int Helplndex )
+Atp_GetHelpAreaInfoRec( char *HelpAreaName, int HelpIndex )
 #else
 static Atp_HelpInfoType *
-Atp_GetHelpAreaInfoRec(HelpAreaName, Helplndex)
+Atp_GetHelpAreaInfoRec(HelpAreaName, HelpIndex)
 	char	*HelpAreaName;
-	int		Helplndex;
+	int		HelpIndex;
 #endif
 {
 	Atp_KeywordType		*HelpKeyTab = NULL;
 	Atp_HelpInfoType	*HelpInfoRecPtr = NULL;
-	int					EndChoiceldx = 0;
+	int					EndChoiceIdx = 0;
 	Atp_NumType			k = 0;
 	int					i = 0;
 	Atp_Result			result = ATP_OK;
@@ -646,8 +647,8 @@ Atp_GetHelpAreaInfoRec(HelpAreaName, Helplndex)
 	if (Atp_HelpParmDef == NULL)
 	  return NULL;
 
-	/* Initialise EndChoiceldx for use below. */
-	EndChoiceldx = Atp_ConstructBracketMatcher(
+	/* Initialise EndChoiceIdx for use below. */
+	EndChoiceIdx = Atp_ConstructBracketMatcher(
 					(ParmDefEntry *)Atp_HelpParmDef,
 					1, /* index of choice construct */
 					((CommandRecord *)Atp_HelpCmdRecPtr)->NoOfPDentries);
@@ -659,14 +660,14 @@ Atp_GetHelpAreaInfoRec(HelpAreaName, Helplndex)
 	  HelpKeyTab =
 	  Atp_HelpParmDef[1].KeyTabPtr =
 			Atp_MakeChoiceKeyTab((ParmDefEntry *)Atp_HelpParmDef,
-			1, EndChoiceldx);
+			1, EndChoiceIdx);
 	}
 	else {
 	  HelpKeyTab = Atp_HelpParmDef[1].KeyTabPtr;
 	}
 
 	/* Access help information. */
-	if (HelpAreaName != NULL && Helplndex < 0) {
+	if (HelpAreaName != NULL && HelpIndex < 0) {
 	  /* Access by name... (k is a mandatory dummy) */
 	  result = Atp_ParseKeyword(HelpAreaName, HelpKeyTab, &k, &i,
 			  	  	  	  	  	NULL, NULL);
@@ -686,7 +687,7 @@ Atp_GetHelpAreaInfoRec(HelpAreaName, Helplndex)
 	}
 	else {
 	  /* Access by index... */
-	  i = HelpKeyTab[Helplndex].internal_use;
+	  i = HelpKeyTab[HelpIndex].internal_use;
 	  HelpInfoRecPtr = (Atp_HelpInfoType *) Atp_HelpParmDef[i].DataPointer;
 	}
 
@@ -1151,10 +1152,10 @@ void Atp_DisplayHelpInfo(helpPtr, indent)
 								to Atp_DisplayCmdHelpInfo
 
 ******************************************************************-*/
-#if defined (__STDC_) || defined (__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 void Atp_DisplayCmdHelpInfo
 (
-	Atp_CmdRec	*CmdRec Ptr,
+	Atp_CmdRec	*CmdRecPtr,
 	int			text_type,
 	int			indent
 )
@@ -1237,7 +1238,7 @@ Atp_Result Atp_HelpCmd(clientData, callback, HelpPageReturnPtr)
 	Atp_Result		rc = ATP_OK;
 
 	char			*HelpPage = NULL;
-	int				Helplndex = 0;
+	int				HelpIndex = 0;
 	int				BuiltInCmdsCount = 0, BuiltInCmdNameWidth = 0;
 	int				UserProcsCount = 0, UserProcsNameWidth = 0;
 	int				GetHelpPageFlag = 1; /* default */
@@ -1275,7 +1276,7 @@ Atp_Result Atp_HelpCmd(clientData, callback, HelpPageReturnPtr)
 
 	Atp_AdvResetBuffer();
 
-	switch(Helplndex = (int)Atp_Index("help areas")) {
+	switch(HelpIndex = (int)Atp_Index("help areas")) {
 		case DEFAULT:	Atp_ListHelpAreas();
 						break;
 		case SHOWALL:	Atp_ShowAllCommands();
@@ -1291,7 +1292,7 @@ Atp_Result Atp_HelpCmd(clientData, callback, HelpPageReturnPtr)
 						break;
 		case CMDPARMS:	HelpPage = Atp_GenerateParmDefHelpInfo
 										((Atp_CmdRec *)FoundCmdNameRecPtr);
-		break;
+						break;
 		case LANGUAGE:
 		{
 						if (Atp_Strcmp(Atp_Str("name"), ATP_LANG_DEF) == 0) {
@@ -1357,7 +1358,7 @@ Atp_Result Atp_HelpCmd(clientData, callback, HelpPageReturnPtr)
 						break;
 		}
 		case VERSION:	Atp_GetHelpOnVersion();			break;
-		default:		Atp_GetHelpOnArea(Helplndex);	break;
+		default:		Atp_GetHelpOnArea(HelpIndex);	break;
 	}
 
 	if (GetHelpPageFlag) {

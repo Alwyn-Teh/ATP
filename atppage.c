@@ -87,13 +87,13 @@ Atp_PagingMode(flag)
 
 /*+********************************************************************
 
-	Function Name:		Atp_PageLongerThan£creen
+	Function Name:		Atp_PageLongerThanScreen
 
 	Copyright:			BNR Europe Limited, 1993
 						Bell-Northern Research
 						Northern Telecom
 
-	Description:		Counts the number of newline	characters to
+	Description:		Counts the number of newline characters to
 						determine whether the text should be paged.
 
 	Modifications:

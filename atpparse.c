@@ -90,8 +90,6 @@ return_string_ptr, parmstore_ptr)
 	void		**parmstore_ptr;
 #endif
 {
-	printf("atpparse.c: Atp_ProcessParameters() - 1\n");
-
 	ParmStoreMemMgtNode *parmstore = NULL;
 
 	/* Type conversion from external to internal format. */
@@ -122,8 +120,6 @@ return_string_ptr, parmstore_ptr)
 	if (parmstore_ptr != NULL)
 	  *parmstore_ptr = NULL;
 
-	printf("atpparse.c: Atp_ProcessParameters() - 2\n");
-
 	/*
 		Caller (e.g. an adaptor) MOST supply return pointer for
 		parmstore, if not, program is incorrect.
@@ -137,11 +133,8 @@ return_string_ptr, parmstore_ptr)
 	  if (return_string_ptr != NULL)
 		*return_string_ptr = errmsg;
 
-	  printf("atpparse.c: Atp_ProcessParameters() - 3\n");
 	  return ATP_ERROR;
 	}
-
-	printf("atpparse.c: Atp_ProcessParameters() - 4\n");
 
 	/*
 		Parmdef should have been verified already at the command
@@ -155,7 +148,6 @@ return_string_ptr, parmstore_ptr)
 	  if (return_string_ptr != NULL)
 		*return_string_ptr = errmsg;
 
-	  printf("atpparse.c: Atp_ProcessParameters() - 5 errmsg = %s\n", errmsg);
 	  return ATP_ERROR;
 	}
 
@@ -183,7 +175,6 @@ return_string_ptr, parmstore_ptr)
 	{
 	  if (!ParmsPresent)
 	  {
-		printf("atpparse.c: Atp_ProcessParameters() - 6\n");
 		return ATP_OK;
 	  }
 	}
@@ -196,7 +187,6 @@ return_string_ptr, parmstore_ptr)
 		  *return_string_ptr =
 				  Atp_MakeErrorMsg(ERRLOC,ATP_ERRCODE_NO_PARMS_REQUIRED,argv[0]);
 		}
-		printf("atpparse.c: Atp_ProcessParameters() - 7\n");
 		return ATP_ERROR;
 	  }
 	  else
@@ -207,7 +197,6 @@ return_string_ptr, parmstore_ptr)
 		  *return_string_ptr =
 				  Atp_MakeErrorMsg(ERRLOC,ATP_ERRCODE_EXPECTED_PARMS_NOT_FOUND,argv[0]);
 		}
-		printf("atpparse.c: Atp_ProcessParameters() - 8\n");
 		return ATP_ERROR;
 	  }
 	}
@@ -215,15 +204,11 @@ return_string_ptr, parmstore_ptr)
 	*(ParmStoreMemMgtNode **)parmstore_ptr = parmstore =
 				(ParmStoreMemMgtNode *) Atp_CreateNewParmStore();
 
-	printf("atpparse.c: Atp_ProcessParameters() - 9\n");
-
 	/*
 		IMPORTANT: Initialise parser arguments record, clearing
 		out all fields to ZERO.
 	*/
 	(void) memset(&ParseStateRec, 0, sizeof(Atp_ParserStateRec));
-
-	printf("atpparse.c: Atp_ProcessParameters() - 10\n");
 
 	/*
 		Fill in required fields, Atp_ScanAndParseParmDef() will
@@ -237,13 +222,10 @@ return_string_ptr, parmstore_ptr)
 	ParseStateRec.TermArgvIdx	= argc;
 						/* i.e. stop at NULL terminating argv pointer */
 
-	printf("atpparse.c: Atp_ProcessParameters() - 11\n");
-
 	if (setjmp(*Atp_JmpBufEnvPtr) == 0) {
 	  Atp_PushParmStorePtrOnStack(parmstore); /* for use by vprocs */
-	  result = Atp_ScanAndParseParmDef(&ParseStateRec) ;
+	  result = Atp_ScanAndParseParmDef(&ParseStateRec);
 	  Atp_PopParmStorePtrFromStack(parmstore);
-	  printf("atpparse.c: Atp_ProcessParameters() - 12\n");
 	}
 	else {
 	  /* Atp_ScanAndParseParmDef() has been aborted. */
@@ -253,13 +235,11 @@ return_string_ptr, parmstore_ptr)
 	  Atp_PopParmStorePtrFromStack(parmstore);
 	  Atp_FreeParmStore(parmstore);
 
-	  printf("atpparse.c: Atp_ProcessParameters() - 13\n");
 	  return ATP_ERROR;
 	}
 
 	if (result == ATP_OK)
 	{
-	  printf("atpparse.c: Atp_ProcessParameters() - 14\n");
 	  if (ParseStateRec.CurrArgvIdx < ParseStateRec.TermArgvIdx)
 	  {
 		ParseStateRec.ReturnStr =
@@ -268,7 +248,6 @@ return_string_ptr, parmstore_ptr)
 								  ParseStateRec.argv[0] ,
 								  ParseStateRec.argv[ParseStateRec.CurrArgvIdx-1],
 								  ParseStateRec.CurrArgvIdx-1);
-		printf("atpparse.c: Atp_ProcessParameters() - 15\n");
 		result = ATP_ERROR;
 	  }
 	}
@@ -279,10 +258,8 @@ return_string_ptr, parmstore_ptr)
 		*return_string_ptr = ParseStateRec.ReturnStr;
 
 	  Atp_FreeParmStore(parmstore);
-	  printf("atpparse.c: Atp_ProcessParameters() - 16\n");
 	}
 
-	printf("atpparse.c: Atp_ProcessParameters() - 17\n");
 	return result;
 
 } /* Atp_ProcessParameters */
@@ -316,8 +293,6 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 	Atp_ParserStateRec	*parseRecPtr;
 #endif
 {
-	printf("atpparse.c: Atp_ScanAndParseParmDef() - 1\n");
-
 	int	ExitParmDefIdx;
 	Atp_BoolType	finish;
 	Atp_Result		result;
@@ -331,8 +306,6 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 												  parseRecPtr->CurrPDidx,
 												  parseRecPtr->NoOfPDentries);
 
-	printf("atpparse.c: Atp_ScanAndParseParmDef() - 2\n");
-
 	/*
 		If at beginning of parmdef, or beginning of a construct, move
 		on to the next entry.
@@ -342,8 +315,6 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 	    (isAtpBeginConstruct(parmcode)))
 	  parseRecPtr->CurrPDidx++;
 
-	printf("atpparse.c: Atp_ScanAndParseParmDef() - 3\n");
-
 	/*
 		Check to see if it's end of parmdef already, i.e. an empty
 		parmdef.
@@ -351,11 +322,9 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 	finish = (Atp_BoolType)
 					(parseRecPtr->CurrPDidx == ExitParmDefIdx);
 
-	printf("atpparse.c: Atp_ScanAndParseParmDef() - 4\n");
-
 	/*
-	* Descend parmdef and invoke parsers.
-	*/
+	 * Descend parmdef and invoke parsers.
+	 */
 	while (!finish)
 	{
 		/* Initialisations */
@@ -370,9 +339,7 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 		if (parser != NULL)
 		{
 		  /* Call parser. */
-		  printf("atpparse.c: Atp_ScanAndParseParmDef() - 5\n");
 		  result = (*parser)(parseRecPtr);
-		  printf("atpparse.c: Atp_ScanAndParseParmDef() - 6\n");
 		}
 		else {
 		  char *parm_type_name = Atp_ParmTypeString(
@@ -382,14 +349,12 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 				  	  	  Atp_MakeErrorMsg(ERRLOC,
 				  	  			  	  	   ATP_ERRCODE_PARSER_MISSING,
 										   parm_type_name);
-		  printf("atpparse.c: Atp_ScanAndParseParmDef() - 7\n");
 		  result = ATP_ERROR;
 		}
 
 		/* Update parseRecPtr result. */
 		parseRecPtr->result = result;
 
-		printf("atpparse.c: Atp_ScanAndParseParmDef() - 8\n");
 		/*
 			Check for error condition and move down parmdef,
 			checking for end of parmdef.
@@ -397,10 +362,8 @@ Atp_ScanAndParseParmDef(parseRecPtr)
 		finish = (Atp_BoolType)
 					((result != ATP_OK) ||
 					(++parseRecPtr->CurrPDidx >= ExitParmDefIdx));
-		printf("atpparse.c: Atp_ScanAndParseParmDef() - 9\n");
 	} /* while */
 
-	printf("atpparse.c: Atp_ScanAndParseParmDef() - 10\n");
 	return result;
 
 } /* Atp_ScanAndParseParmDef */
@@ -455,7 +418,6 @@ Atp_SelectInputAndParseParm(parseRec, parser, ascii_parmtype, va_alist)
 {
 	va_list	ap;
 
-	printf("atpparse.c: Atp_SelectInputAndParseParm() - 1\n");
 	Atp_CallFrame parser_interface;
 
 	char *parmname = Atp_CurrParmName = Atp_ParseRecParmDefEntry(parseRec).Name;
@@ -478,18 +440,15 @@ Atp_SelectInputAndParseParm(parseRec, parser, ascii_parmtype, va_alist)
 	va_start(ap);
 #endif
 
-	printf("atpparse.c: Atp_SelectInputAndParseParm() - 2\n");
 	Atp_CopyCallFrame(&parser_interface, ap);
 	va_end(ap);
 
 	is_optional = (Atp_BoolType)AtpParmIsOptional(
 						Atp_ParseRecParmDefEntry(parseRec).parmcode);
 
-	printf("atpparse.c: Atp_SelectInputAndParseParm() - 3\n");
 	/* If no tokens left to parse ... */
 	if (parseRec->CurrArgvIdx >= parseRec->TermArgvIdx)
 	{
-	  printf("atpparse.c: Atp_SelectInputAndParseParm() - 4\n");
 	  if (Atp_InteractivePrompting)
 	  {
 		/*
@@ -553,7 +512,6 @@ Atp_SelectInputAndParseParm(parseRec, parser, ascii_parmtype, va_alist)
 			encountered eventually, it will fail the parsing
 			task.
 		*/
-		printf("atpparse.c: Atp_SelectInputAndParseParm() - 5\n");
 		if (is_optional) {
 		  /*
 				Get default from parmdef entry and put it in the
@@ -593,7 +551,6 @@ Atp_SelectInputAndParseParm(parseRec, parser, ascii_parmtype, va_alist)
 	  }
 	}
 	else {
-	  printf("atpparse.c: Atp_SelectInputAndParseParm() - 6\n");
 	  ascii_parm = (parseRec->argv)[parseRec->CurrArgvIdx];
 	  if ((ascii_parm != NULL) && (is_optional) && Atp_OptParmOmitted(ascii_parm))
 	  {
@@ -612,11 +569,9 @@ Atp_SelectInputAndParseParm(parseRec, parser, ascii_parmtype, va_alist)
 		  parseRec->CurrArgvIdx++;
 	  }
 	  else {
-		printf("atpparse.c: Atp_SelectInputAndParseParm() - 7\n");
 		result = parser(ascii_parm, ATP_FRAME_RELAY(parser_interface));
 	  }
 	}
 
-	printf("atpparse.c: Atp_SelectInputAndParseParm() - 8\n");
 	return result;
 }

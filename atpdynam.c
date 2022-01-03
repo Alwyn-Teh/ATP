@@ -72,7 +72,6 @@ static char *__Atp_Local_FileName__ = __FILE__;
 #endif
 
 #define DEFAULT_BUFSIZE 4096
-// #define DEFAULT_BUFSIZE 10
 
 /***************************** private VARIABLES ******************************/
 
@@ -124,12 +123,7 @@ static int dynamic_strlen(fmtstr, ap)
 
 	va_copy(ap2, ap);
 	count = vfprintf(dev_null_fd, fmtstr, ap2);
-	printf("atpdynam.c: dynamic_strlen(fmtstr %s, ap)...\n", fmtstr);
 	va_end(ap2);
-	va_copy(ap2, ap);
-	printf(">>>");
-	vprintf(fmtstr, ap2);
-	printf("<<<\n");
 
 	if (dev_null_fd != (FILE *)0 && first_time)
 	{
@@ -142,10 +136,6 @@ static int dynamic_strlen(fmtstr, ap)
 #  endif
 #endif
 	}
-
-	printf("\natpdynam.c: dynamic_strlen(fmtstr, ap) returns count = %d\n", count);
-
-	va_end(ap2);
 
 	/* vfprintf() returns EOF if error occurs. */
 	if (count == EOF)
@@ -161,7 +151,7 @@ static int dynamic_strlen(fmtstr, ap)
 int (*Atp_FormatStrlen)_PROTO_(( char *fmtstr, va_list ap )) = dynamic_strlen;
 
 #ifdef TCL_MEM_DEBUG
-static char *	Atp_MemDebugFi1ename	= NULL;
+static char *	Atp_MemDebugFi1ename   = NULL;
 static int		Atp_MemDebugLinenumber = 0;
 #if defined(__STDC__) || defined(__cplusplus)
 void Atp_MemDebugLocn( char *filename, int linenumber )
@@ -300,8 +290,6 @@ static void destroy_dynamic_buffer()
 	int		strsize;
 	int		delta, remain_size;
 
-	printf("atpdynam.c: Atp_AdvPrintf called...\n");
-
 #if defined(__STDC__) || defined(__cplusplus)
    va_start(args, fmtstr);
 #else
@@ -311,11 +299,6 @@ static void destroy_dynamic_buffer()
    delta = remain_size = 0;
 
    strsize = dynamic_strlen(fmtstr, args);
-   printf("\natpdynam.c: Atp_AdvPrintf - dynamic_strlen returns strsize = %d\n", strsize);
-   va_copy(ap2, args);
-   vprintf(fmtstr, ap2); // was args
-   printf("\nOK\n");
-   va_end(ap2);
 
    if (strsize == -1) {
 	 destroy_dynamic_buffer () ;
@@ -356,9 +339,6 @@ static void destroy_dynamic_buffer()
 	delta		= atpdynam.curr_ptr - atpdynam.buffer;
 	remain_size	= atpdynam.bufsize - delta;
 
-	printf("delta = %d\n", delta);
-	printf("remain_size = %d\n", remain_size);
-
 	/*
 	 *	Increase buffer size if not enough room for string to fit in or
 	 *	if remaining space after vsprintf less than half of buffer size.
@@ -377,7 +357,7 @@ static void destroy_dynamic_buffer()
 	    /* Print some of the accummulated text, approx. 1 screenful. */
 		atpdynam.buffer[2001] = '\0';
 		fprintf(stderr, "%s...\n", atpdynam.buffer);
-		fprintf (stderr, "%c", '\007');
+		fprintf(stderr, "%c", '\007');
 		fflush(stderr);
 
 		/* Alert user! Ring the bell */
@@ -435,12 +415,6 @@ static void destroy_dynamic_buffer()
 	  }
 	}
 
-	printf("atpdynam.c: Atp_AdvPrintf calls vsprintf(...)\n");
-	va_copy(ap2, args);
-	vprintf(fmtstr, ap2); // was args
-	printf("\nOK\n");
-	va_end(ap2);
-	printf("\natpdynam.curr_ptr: %s\n", atpdynam.curr_ptr);
 	(void) vsprintf(atpdynam.curr_ptr, fmtstr, args); /* append new string */
 
 	atpdynam.curr_ptr += strsize;
@@ -448,7 +422,6 @@ static void destroy_dynamic_buffer()
 
 	va_end(args);
 
-	printf("atpdynam.c: Atp_AdvPrintf returns %d\n", atpdynam.curr_strlen);
 	return (atpdynam.curr_strlen);
 }
 

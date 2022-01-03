@@ -86,10 +86,8 @@ int Atp_ExecuteCallback(callBack, parmstore, va_alist)
 #else
 	va_start(ap);
 #endif
-	printf("Atp_ExecuteCallback calling Atp_CopyCallFrame...\n");
 	Atp_CopyCallFrame(&interface, ap);
 	va_end(ap);
-	printf("OK\n");
 
 	if (callBack != NULL) {
 		/*
@@ -97,7 +95,6 @@ int Atp_ExecuteCallback(callBack, parmstore, va_alist)
 			 imply infinite loop.
 		 */
 		if (++CmdNestLevel > ATP_MAX_NESTCMD_DEPTH - 1) {
-			printf("Atp_ExecuteCallback: ++CmdNestLevel > ATP_MAX_NESTCMD_DEPTH - 1\n");
 			errmsg = Atp_MakeErrorMsg(ERRLOC,
 									  ATP_ERRCODE_NESTCMD_DEPTH_EXCEEDED,
 									  ATP_MAX_NESTCMD_DEPTH);
@@ -113,12 +110,9 @@ int Atp_ExecuteCallback(callBack, parmstore, va_alist)
 			 */
 			Atp_PushParmStorePtrOnStack(parmstore);
 
-			printf("Atp_ExecuteCallback: calling callBack...\n");
 			result = (*callBack)(ATP_FRAME_RELAY(interface));
-			printf("OK - callBack returned %d\n", result);
 
 			Atp_PopParmStorePtrFromStack(parmstore);
-			printf("Atp_ExecuteCallback: returned from Atp_PopParmStorePtrFromStack()\n");
 		}
 		else {
 			/*
@@ -132,7 +126,6 @@ int Atp_ExecuteCallback(callBack, parmstore, va_alist)
 			errmsg = Atp_GetHyperSpaceMsg();
 
 			Atp_ReturnDynamicStringToAdaptor(errmsg,ATP_FRAME_RELAY(interface));
-			printf("Atp_ExecuteCallback: setjmp error\n");
 		}
 		CmdNestLevel--;
 	}
@@ -141,7 +134,6 @@ int Atp_ExecuteCallback(callBack, parmstore, va_alist)
 	Atp_FreeParmStore(parmstore);
 	parmstore = NULL;
 
-	printf("Atp_ExecuteCallback: returning %d\n", result);
 	return result;
 }
 
