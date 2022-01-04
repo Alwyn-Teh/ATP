@@ -786,7 +786,7 @@ Atp_Result Atp2Tcl_Init(interp)
 								  (ClientData) Atp2Tcl_CmdTableAccessDesc,
 								  (Tcl_CmdDeleteProc *) NULL,
 #ifdef DEBUG
-								  ___FILE__, __LINE__,
+								  __FILE__, __LINE__,
 #else
 								  NULL, 0,
 #endif
@@ -1804,7 +1804,7 @@ static Atp_Result Atp2Tcl_GetTclManpage(_clientData, va_alist)
 		int result = ATP_OK;
 		int isTclSummaryManpage = 0;
 		char *name = Atp_Str("name"); /* as declared in "man"+"help" parmdef */
-#if defined(__STDC__) || defined(___cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 		va_start(ap, _clientData);
 #else
 		va_start(ap);

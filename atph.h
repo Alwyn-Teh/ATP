@@ -884,7 +884,7 @@ EXTERN Atp_Result Atp_HelpCmd _PROTO_((void *clientData,
 									  char **HelpPageReturnPtr));
 
 EXTERN int					Atp_PagingMode _PROTO_((int flag));
-EXTERN int					Atp_OutputPager _PROTO_ ((char *fmtstr _VARARGS_));
+EXTERN int					Atp_OutputPager _PROTO_ ((const char *fmtstr _VARARGS_));
 EXTERN int					Atp_PagingNeeded;
 EXTERN Atp_Result			Atp_PagingCmd _PROTO_((_ATP_EXT_CMD_CALLBACK_INTERFACE_));
 EXTERN Atp_ParmDefEntry		*Atp_PagingParmsPtr;

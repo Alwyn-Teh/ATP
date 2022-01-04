@@ -216,7 +216,7 @@ Atp_MatchStrings(src, strTab)
 	Alwyn Teh	26 December 2021	Make new string to avoid bus error
 
 *********************************************************************-*/
-#if defined(__STDC__) || defined(___cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 char *Atp_StrToLower(char *string)
 #else
 char *

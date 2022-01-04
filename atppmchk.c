@@ -15,7 +15,7 @@
 
 *********************************************************************-*/
 
-#if defined(__STDC__) || defined(___cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 #	include <stdarg.h>
 #else
 #	include <varargs.h>
@@ -25,7 +25,7 @@
 #include "atpsysex.h"
 
 #ifdef DEBUG
-static char *_______Atp_Local_Fi leName_ = __FILE__;
+static char *__Atp_Local_FileName__ = __FILE__;
 #endif
 
 /*+*******************************************************************

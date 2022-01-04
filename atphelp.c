@@ -1250,7 +1250,7 @@ int Atp_CompareNames(sp1, sp2)
 									CompareNameDescRecords()
 
 *******************************************************************-*/
-#if defined(__STDC__) || defined(___cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 int Atp_CompareCmdRecNames( CommandRecord **rec1p, CommandRecord **rec2p )
 #else
 int Atp_CompareCmdRecNames(rec1p, rec2p)

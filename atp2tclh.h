@@ -118,7 +118,7 @@ EXTERN Atp_Result	Atp2Tcl_InternalCreateCommand
 								 char *filename, int linenumber,
 								 Atp_CmdRec **retum_cmd_rec));
 
-typedef int			(*PFI)_PROTO_((char *format_string _VARARGS_));
+typedef int			(*PFI)_PROTO_((const char *format_string _VARARGS_));
 EXTERN PFI			Atp2Tcl_GetPager _PROTO_((Tcl_Interp *interp));
 EXTERN int			Atp2Tcl_UnknownCmd _PROTO_((ClientData clientdata,
 												Tcl_Interp *interp,

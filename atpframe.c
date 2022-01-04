@@ -83,11 +83,16 @@ Atp_CopyCallFrame(framePtr, argsPtr)
 #endif
 {
 	register int x;
+	va_list ap2;
+
+	va_copy(ap2, argsPtr);
 
 	for (x = 0; x < ATP_DEFAULT_MAX_ARGS; x++)
 	{
-	   framePtr->stack[x] = va_arg(argsPtr, ATP_FRAME_ELEM_TYPE);
+	   framePtr->stack[x] = va_arg(ap2, ATP_FRAME_ELEM_TYPE);
 	}
+
+	va_end(ap2);
 }
 
 #if defined(__STDC__) || defined(__cplusplus)

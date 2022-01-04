@@ -156,11 +156,11 @@ Atp_PageLongerThanScreen(output_string)
 								  for, say, external manpage.
 
 *******************************************************************-*/
-#if defined(__STDC__) || defined(___cplusplus)
-int Atp_OutputPager(char *format, ...)
+#if defined(__STDC__) || defined(__cplusplus)
+int Atp_OutputPager(const char *format, ...)
 #else
 int Atp_OutputPager(format, va_alist)
-	char *format;
+	const char *format;
 	va_dcl
 #endif
 {
@@ -170,7 +170,7 @@ int Atp_OutputPager(format, va_alist)
 	va_list ap;
 
 #if defined (__STDC__) || defined (__cplusplus)
-	va_start (ap, format);
+	va_start(ap, format);
 #else
 	va_start(ap);
 #endif
@@ -184,7 +184,7 @@ int Atp_OutputPager(format, va_alist)
 
 	  Atp_DvsPrintf(&tmp, format, ATP_FRAME_RELAY(callframe));
 
-	  Atp_PagingNeeded = (Atp_PageLongerThanScreen (tmp)) ? 1 : 0;
+	  Atp_PagingNeeded = (Atp_PageLongerThanScreen(tmp)) ? 1 : 0;
 
 	  video_On = Atp_VideoCharsUsed(tmp);
 
@@ -196,9 +196,10 @@ int Atp_OutputPager(format, va_alist)
 		 && (Atp_PagingNeeded || video_On)) ||
 		 ((Atp_PagingMode(ATP_QUERY_PAGING_MODE) == ATP_PAGING_MODE_ON)))
 	{
-	  if (pager_fp == NULL && pager != NULL)
+	  if (pager_fp == NULL && pager != NULL) {
 		pager_fp = popen (pager, "w"); /* create pipe to pager process */
 		/* stdin is duplicated for pager and cannot be pclose()ed */
+	  }
 
 	  /*
 			Either pager set to “none", or pager_fp is NULL due to popen()
@@ -531,7 +532,7 @@ Atp_Result Atp_PagerCmd(va_alist)
 	Alwyn Teh	27 July 1994	Initial	Creation
 
 *******************************************************************-*/
-#if defined(__STDC__) || defined(___cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 static int Atp_VideoCharsUsed(char *str)
 #else
 static int Atp_VideoCharsUsed(str)
