@@ -1,9 +1,9 @@
 CC=gcc -g
 CFLAGS=-I. -I../../eclipse-workspace-cpp-slp/SLP
-LDFLAGS=-L. -L../../eclipse-workspace-cpp-slp/SLP
+LDFLAGS=-L. -L../../eclipse-workspace-cpp-slp/SLP -L/usr/lib/x86_64-linux-gnu
 RM = rm -f
 RANLIB = ranlib
-AR = ar rcul
+AR = ar rcs
 
 ATP_SRCS = 	atp2tcl.c atpalloc.c atpbcdpm.c atpbool.c atpcase.c \
 			atpcheck.c atpchois.c atpcmd.c atpcmplx.c atpdebug.c \
@@ -34,7 +34,7 @@ libatp.a:	$(ATP_OBJS)
 
 atpexmp:	libatp.a atpexmp.o
 			$(RM) $@
-			$(CC) -v -o $@ $(CFLAGS) atpexmp.c $(LDFLAGS) -lslp -ltcl -latp -lm
+			$(CC) -v -o $@ $(CFLAGS) atpexmp.c $(LDFLAGS) -lslp -ltcl8.6 -latp -lm
 			chmod +x atpexmp
 
 clean:
