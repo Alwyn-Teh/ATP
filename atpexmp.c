@@ -2119,7 +2119,7 @@ Atp_Result LLC_TEST_Cmd(clientData, interp, arge, argv)
 {
 	int result;
 
-	Atp_AdvPrintf("Executing command; %s\n\n", llc_cmd);
+	Atp_AdvPrintf("Executing command: %s\n\n", llc_cmd);
 
 	result = Tcl_Eval(interp, llc_cmd);
 
