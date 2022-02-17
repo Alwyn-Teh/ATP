@@ -3221,7 +3221,7 @@ struct {
 			CheckTclInterfaceCmd, NULL, (ClientData) "check"},
 	{"recur", "invokes nested command", RecurCmd, RecurParms,
 			(ClientData) 0},
-	{"llc_test", "11c command self-test", LLC_TEST_Cmd, NULL,
+	{"llc_test", "llc command self-test", LLC_TEST_Cmd, NULL,
 			(ClientData) 0},
 	{"logtest", "Log commands and results to test file",
 			LogtestCmd, LogtestParms, (ClientData) 0},
